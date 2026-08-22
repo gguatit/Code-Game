@@ -1,0 +1,25 @@
+import { Link } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import { LangBadge } from "@/components/game/lang-badge";
+import { LANGUAGES } from "@/data/languages";
+
+export function LangsPage() {
+  return (
+    <div>
+      <h1 className="text-2xl font-bold tracking-tight">언어 선택</h1>
+      <p className="mt-1 text-sm text-muted-foreground">
+        연습할 언어를 선택하세요. 카테고리는 플레이 화면에서 바꿀 수 있습니다.
+      </p>
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {LANGUAGES.map((l) => (
+          <Link key={l.id} to={`/play/${l.id}`} className="focus-visible:outline-none">
+            <Card className="flex items-center gap-4 p-4 transition-colors hover:bg-accent">
+              <LangBadge language={l} size={44} />
+              <span className="font-medium">{l.name}</span>
+            </Card>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
