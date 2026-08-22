@@ -11,7 +11,7 @@
     {
       "binding": "DB",
       "database_name": "code-game",
-      "database_id": ""
+      "database_id": "374c7873-ea66-4c5e-9d6d-7805ddc22410"
     }
   ],
   "observability": { "enabled": true }
