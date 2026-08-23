@@ -9,6 +9,7 @@ import { LoginPage } from "@/features/auth/LoginPage";
 import { SignupPage } from "@/features/auth/SignupPage";
 import { PrivacyPage } from "@/features/legal/PrivacyPage";
 import { TermsPage } from "@/features/legal/TermsPage";
+import { NotFoundPage } from "@/features/not-found/NotFoundPage";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
       { path: "/signup", element: <SignupPage /> },
       { path: "/privacy", element: <PrivacyPage /> },
       { path: "/terms", element: <TermsPage /> },
+      { path: "*", element: <NotFoundPage /> },
     ],
   },
 ]);
