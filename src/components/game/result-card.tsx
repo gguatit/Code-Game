@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/app/auth-context";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { CategoryId } from "@/data/categories";
 import type { LanguageDef } from "@/data/languages";
 import type { Stats } from "@/engine/types";
+import { api } from "@/lib/api";
 import { getBest, isNewRecord, saveBest } from "@/lib/personal-best";
 
 interface ResultCardProps {
@@ -19,10 +21,25 @@ export function ResultCard({ stats, language, category, onRestart }: ResultCardP
   // ponytail: useMemo([]) — 렌더 시점(저장 전) 최고기록 읽기. StrictMode 이중 effect에도 표시 안정
   const record = useMemo(() => isNewRecord(language.id, category, stats.wpm), []);
   const [best, setBest] = useState<number | null>(() => getBest(language.id, category)?.wpm ?? null);
+  const { user } = useAuth();
+  const [saveState, setSaveState] = useState<"saving" | "saved" | "error">("saving");
+  const requested = useRef(false);
 
   useEffect(() => {
     saveBest(language.id, category, stats.wpm);
     setBest(getBest(language.id, category)?.wpm ?? stats.wpm);
+    if (!user || requested.current) return;
+    requested.current = true;
+    api
+      .saveScore({
+        category,
+        language: language.id,
+        wpm: stats.wpm,
+        accuracy: stats.accuracy,
+        durationMs: stats.elapsedMs,
+      })
+      .then(() => setSaveState("saved"))
+      .catch(() => setSaveState("error"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -31,6 +48,14 @@ export function ResultCard({ stats, language, category, onRestart }: ResultCardP
       <CardHeader>
         <CardTitle className="flex items-center justify-center gap-2">
           결과 {record && <Badge>신기록</Badge>}
+          {user &&
+            (saveState === "saved" ? (
+              <Badge>저장됨</Badge>
+            ) : saveState === "error" ? (
+              <Badge variant="destructive">저장 실패</Badge>
+            ) : (
+              <Badge variant="outline">저장 중...</Badge>
+            ))}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -50,6 +75,14 @@ export function ResultCard({ stats, language, category, onRestart }: ResultCardP
             <dd className="font-semibold tabular-nums">{best ?? "-"} WPM</dd>
           </div>
         </dl>
+        {!user && (
+          <p className="text-sm text-muted-foreground">
+            <Link to="/login" className="underline hover:text-foreground">
+              로그인
+            </Link>
+            하면 기록이 리더보드에 저장됩니다
+          </p>
+        )}
         <div className="flex justify-center gap-2 pt-2">
           <Button onClick={onRestart}>다시 연습</Button>
           <Button variant="outline" asChild>

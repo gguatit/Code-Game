@@ -1,11 +1,26 @@
-import { Link } from "react-router-dom";
-import { Moon, Sun } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { LogOut, Moon, Sun } from "lucide-react";
+import { useAuth } from "@/app/auth-context";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Logo } from "@/components/logo";
 import { useTheme } from "@/app/theme";
 
 export function Navbar() {
   const { theme, toggle } = useTheme();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const onLogout = async () => {
+    await logout();
+    navigate("/");
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur">
@@ -26,10 +41,35 @@ export function Navbar() {
           <Button variant="ghost" size="icon" onClick={toggle} aria-label="테마 전환">
             {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </Button>
-          {/* Task 16: 로그인 상태별 유저 메뉴로 교체 */}
-          <Button asChild variant="outline" size="sm">
-            <Link to="/login">로그인</Link>
-          </Button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label="사용자 메뉴"
+                >
+                  <Avatar className="size-8">
+                    <AvatarFallback>{user.displayName.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-40">
+                <DropdownMenuItem disabled className="text-xs text-muted-foreground">
+                  {user.displayName}
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/leaderboard">내 기록</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={onLogout}>
+                  <LogOut className="size-4" /> 로그아웃
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button asChild variant="outline" size="sm">
+              <Link to="/login">로그인</Link>
+            </Button>
+          )}
         </div>
       </div>
     </header>
