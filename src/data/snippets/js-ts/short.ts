@@ -1,8 +1,0 @@
-export const snippets = [
-  "function fizzBuzz(n) {\n  for (let i = 1; i <= n; i++) {\n    if (i % 15 === 0) console.log('FizzBuzz');\n    else if (i % 3 === 0) console.log('Fizz');\n    else if (i % 5 === 0) console.log('Buzz');\n    else console.log(i);\n  }\n}",
-  "async function retry(fn, attempts = 3) {\n  for (let i = 0; i < attempts; i++) {\n    try {\n      return await fn();\n    } catch (err) {\n      if (i === attempts - 1) throw err;\n      await new Promise((r) => setTimeout(r, 2 ** i * 100));\n    }\n  }\n}",
-  "function twoSum(nums, target) {\n  const seen = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const need = target - nums[i];\n    if (seen.has(need)) return [seen.get(need), i];\n    seen.set(nums[i], i);\n  }\n  return null;\n}",
-  "export function useLocalStorage(key, initial) {\n  const [value, setValue] = useState(() => {\n    try {\n      return JSON.parse(localStorage.getItem(key)) ?? initial;\n    } catch {\n      return initial;\n    }\n  });\n  useEffect(() => localStorage.setItem(key, JSON.stringify(value)), [key, value]);\n  return [value, setValue];\n}",
-  "class Queue {\n  #items = [];\n  enqueue(item) { this.#items.push(item); }\n  dequeue() { return this.#items.shift(); }\n  get size() { return this.#items.length; }\n  isEmpty() { return this.size === 0; }\n}",
-  "export function formatBytes(bytes, decimals = 2) {\n  if (bytes === 0) return '0 B';\n  const units = ['B', 'KB', 'MB', 'GB', 'TB'];\n  const i = Math.floor(Math.log(bytes) / Math.log(1024));\n  return parseFloat((bytes / 1024 ** i).toFixed(decimals)) + ' ' + units[i];\n}",
-];

@@ -18,9 +18,9 @@ const pickSnippet = (snippets: readonly Snippet[]) =>
 function Play({ language }: { language: LanguageDef }) {
   // ponytail: LanguageDef.id는 string이지만 스니펫 레지스트리 키와 실제로 동일 — 캐스팅 한 줄로 타협
   const langId = language.id as Parameters<typeof getSnippets>[0];
-  const [category, setCategory] = useState<CategoryId>("terms");
+  const [category, setCategory] = useState<CategoryId>("long");
   const [state, setState] = useState<TypingState>(() =>
-    initState(pickSnippet(getSnippets(langId, "terms"))),
+    initState(pickSnippet(getSnippets(langId, "long"))),
   );
 
   const finished = state.finishedAt !== null;

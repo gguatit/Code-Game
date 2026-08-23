@@ -1,7 +1,7 @@
 import { Env } from "../types";
 import { getSessionUser } from "../auth";
 
-const CATEGORIES = new Set(["terms", "short", "long", "practical"]);
+const CATEGORIES = new Set(["long", "practical"]);
 const LANGUAGE_IDS = new Set([
   "js-ts",
   "python",

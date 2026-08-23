@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS sessions (
 CREATE TABLE IF NOT EXISTS scores (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  category TEXT NOT NULL CHECK (category IN ('terms','short','long','practical')),
+  category TEXT NOT NULL CHECK (category IN ('long','practical')),
   language TEXT NOT NULL,
   wpm REAL NOT NULL,
   accuracy REAL NOT NULL,                -- 0~100

@@ -24,7 +24,7 @@ import { api, type LeaderboardEntry } from "@/lib/api";
 
 export function LeaderboardPage() {
   const { user } = useAuth();
-  const [category, setCategory] = useState<CategoryId>("terms");
+  const [category, setCategory] = useState<CategoryId>("long");
   const [language, setLanguage] = useState<string>("all");
   const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null);
 

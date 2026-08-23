@@ -49,10 +49,8 @@ export const REGISTRY = {
 export type Snippet = string;
 
 export const MIN_COUNTS = {
-  terms: 10,
-  short: 6,
-  long: 3,
-  practical: 2,
+  long: 5,
+  practical: 4,
 } as const;
 
 export const getSnippets = (

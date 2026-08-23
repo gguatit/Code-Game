@@ -40,4 +40,30 @@ describe("snippets", () => {
       }
     }
   });
+
+  it("brackets are balanced in every snippet", () => {
+    const pairs: Record<string, string> = { ")": "(", "]": "[", "}": "{" };
+    for (const lang of LANGUAGES) {
+      for (const cat of CATEGORIES) {
+        for (const s of getSnippets(lang.id, cat.id)) {
+          // 문자열 리터럴 내용은 무시하고 코드 구조의 괄호만 검사
+          const stripped = s
+            .replace(/\\./g, "")
+            .replace(/"[^"\n]*"/g, "")
+            .replace(/'[^'\n]*'/g, "");
+          const stack: string[] = [];
+          for (const ch of stripped) {
+            if ("([{".includes(ch)) {
+              stack.push(ch);
+            } else if (ch in pairs) {
+              expect(stack.pop(), `${lang.id}/${cat.id}: unbalanced`).toBe(
+                pairs[ch]
+              );
+            }
+          }
+          expect(stack, `${lang.id}/${cat.id}: unclosed`).toHaveLength(0);
+        }
+      }
+    }
+  });
 });
