@@ -32,6 +32,9 @@ export async function verifyPassword(password: string, stored: string): Promise<
 export async function createSession(db: D1Database, userId: number): Promise<string> {
   const token = Array.from(crypto.getRandomValues(new Uint8Array(32)),
     (b) => b.toString(16).padStart(2, "0")).join("");
+  // 만료된 세션 행 정리 (로그인/가입 빈도가 낮아 여기서 일괄 청소)
+  await db.prepare("DELETE FROM sessions WHERE expires_at <= ?")
+    .bind(new Date().toISOString()).run();
   await db.prepare("INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?)")
     .bind(token, userId, new Date(Date.now() + SESSION_TTL_MS).toISOString()).run();
   return token;

@@ -49,7 +49,7 @@ export async function saveScore(request: Request, env: Env): Promise<Response> {
   const { category, language, wpm, accuracy, durationMs } = body;
   if (!CATEGORIES.has(category ?? "") || !LANGUAGE_IDS.has(language ?? ""))
     return Response.json({ error: "잘못된 카테고리/언어" }, { status: 400 });
-  // ponytail: sanity cap만 적용(비정상 값 거부). rate limiting은 나중 할일
+  // ponytail: sanity cap + 제출 간격 검사. IP 기반 레이트리밋은 Cloudflare WAF 룰로 처리
   if (
     typeof wpm !== "number" ||
     typeof accuracy !== "number" ||
@@ -63,10 +63,22 @@ export async function saveScore(request: Request, env: Env): Promise<Response> {
   )
     return Response.json({ error: "비정상적인 기록입니다" }, { status: 422 });
 
+  // 플레이 시간보다 짧은 간격으로 연속 제출하면 조작으로 간주 (여유 2초)
+  const last = await env.DB
+    .prepare("SELECT created_at FROM scores WHERE user_id = ? ORDER BY created_at DESC LIMIT 1")
+    .bind(user.id)
+    .first<{ created_at: string }>();
+  if (last) {
+    const gapMs = Date.now() - Date.parse(last.created_at);
+    if (gapMs < durationMs - 2000)
+      return Response.json({ error: "제출이 너무 빠릅니다" }, { status: 429 });
+  }
+
   await env.DB.prepare(
-    "INSERT INTO scores (user_id, category, language, wpm, accuracy, duration_ms) VALUES (?, ?, ?, ?, ?, ?)"
+    "INSERT INTO scores (user_id, category, language, wpm, accuracy, duration_ms, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
   )
-    .bind(user.id, category, language, wpm, accuracy, Math.round(durationMs))
+    // created_at을 ISO로 직접 기록(datetime('now')는 초 단위+현지파싱 모호)
+    .bind(user.id, category, language, wpm, accuracy, Math.round(durationMs), new Date().toISOString())
     .run();
 
   return Response.json({ saved: true });
@@ -76,7 +88,8 @@ export async function leaderboard(request: Request, env: Env): Promise<Response>
   const url = new URL(request.url);
   const category = url.searchParams.get("category") ?? "";
   const language = url.searchParams.get("language") ?? "";
-  const limit = Math.min(Number(url.searchParams.get("limit")) || 20, 50);
+  // SQLite는 LIMIT 음수를 무제한으로 취급하므로 하한도 클램프
+  const limit = Math.min(Math.max(Number(url.searchParams.get("limit")) || 20, 1), 50);
   if (!CATEGORIES.has(category))
     return Response.json({ error: "category 파라미터가 필요합니다" }, { status: 400 });
 

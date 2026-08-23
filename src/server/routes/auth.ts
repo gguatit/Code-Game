@@ -39,8 +39,11 @@ export async function register(request: Request, env: Env): Promise<Response> {
   const email = (body?.email ?? "").trim().toLowerCase();
   const password = body?.password ?? "";
   const displayName = (body?.displayName ?? "").trim();
-  if (!EMAIL_RE.test(email)) return bad("올바른 이메일 형식이 아닙니다");
-  if (password.length < 8) return bad("비밀번호는 8자 이상이어야 합니다");
+  if (!EMAIL_RE.test(email) || email.length > 254)
+    return bad("올바른 이메일 형식이 아닙니다");
+  // 최대 길이 제한: PBKDF2가 거대 입력을 해시하는 CPU DoS 방지
+  if (password.length < 8 || password.length > 128)
+    return bad("비밀번호는 8~128자여야 합니다");
   if (displayName.length < 2 || displayName.length > 20)
     return bad("닉네임은 2~20자여야 합니다");
 
