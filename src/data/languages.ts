@@ -21,6 +21,13 @@ export const LANGUAGES: LanguageDef[] = [
   { id: "sql", name: "SQL", monogram: "SQ", color: "#e38c00" },
   { id: "html-css", name: "HTML / CSS", monogram: "<>", color: "#e34c26" },
   { id: "dart", name: "Dart", monogram: "Dt", color: "#027dfd" },
+  { id: "lua", name: "Lua", monogram: "Lu", color: "#4f8fd6" },
+  { id: "haskell", name: "Haskell", monogram: "Hs", color: "#8a7fb5" },
+  { id: "elixir", name: "Elixir", monogram: "Ex", color: "#9b7bb8" },
+  { id: "scala", name: "Scala", monogram: "Sc", color: "#dc322f" },
+  { id: "perl", name: "Perl", monogram: "Pl", color: "#6478b4" },
+  { id: "zig", name: "Zig", monogram: "Zg", color: "#f7a41d" },
+  { id: "nim", name: "Nim", monogram: "Nm", color: "#ffe953" },
 ];
 
 export const getLanguage = (id: string | undefined) =>

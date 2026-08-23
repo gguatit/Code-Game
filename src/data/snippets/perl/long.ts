@@ -1,0 +1,5 @@
+export const snippets = [
+  "# Memoized Fibonacci using state and a hash\nuse strict;\nuse warnings;\n\nmy %cache = (0 => 0, 1 => 1);\nsub fib {\n    my ($n) = @_;\n    return $cache{$n} if exists $cache{$n};\n    $cache{$n} = fib($n - 1) + fib($n - 2);\n    return $cache{$n};\n}\n\nprint fib(40), \"\\n\";",
+  "# Word frequency with sort by count then word\nuse strict;\nuse warnings;\n\nmy %count;\ncount++ for split /\\W+/, <>;\nmy @sorted = sort { $count{$b} <=> $count{$a} || $a cmp $b } keys %count;\nprintf \"%-12s %d\\n\", $_, $count{$_} for @sorted[0 .. ($#sorted > 9 ? 9 : $#sorted)];",
+  "# Directory tree walker printing sizes per extension\nuse strict;\nuse warnings;\nuse File::Find;\n\nmy %size_by_ext;\nfind(sub {\n    return unless -f $_;\n    my ($ext) = /\\.([^.]+)$/ ? lc($1) : 'none';\n    $size_by_ext{$ext} += -s _;\n}, shift // '.');\n\nfor my $ext (sort { $size_by_ext{$b} <=> $size_by_ext{$a} } keys %size_by_ext) {\n    printf \"%6s %10d bytes\\n\", \".$ext\", $size_by_ext{$ext};\n}",
+];

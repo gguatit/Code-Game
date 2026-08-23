@@ -18,6 +18,13 @@ const LANGUAGE_IDS = new Set([
   "sql",
   "html-css",
   "dart",
+  "lua",
+  "haskell",
+  "elixir",
+  "scala",
+  "perl",
+  "zig",
+  "nim",
 ]);
 
 interface ScoreInput {

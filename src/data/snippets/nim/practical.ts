@@ -1,0 +1,4 @@
+export const snippets = [
+  "# Object variant (sum type) for shapes with area calculation\ntype\n  ShapeKind = enum skCircle, skRect\n  Shape = object\n    case kind: ShapeKind\n    of skCircle:\n      radius: float\n    of skRect:\n      width, height: float\n\nfunc area(s: Shape): float =\n  case s.kind\n  of skCircle: PI * s.radius * s.radius\n  of skRect: s.width * s.height\n\necho area(Shape(kind: skCircle, radius: 2.0))",
+  "# Custom iterator walking a tree in order\ntype Node = ref object\n  val: int\n  left, right: Node\n\niterator inorder(n: Node): int =\n  if n != nil:\n    for v in inorder(n.left):\n      yield v\n    yield n.val\n    for v in inorder(n.right):\n      yield v\n\nlet root = Node(val: 2, left: Node(val: 1), right: Node(val: 3))\nfor v in inorder(root):\n  echo v",
+];
