@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyBackspace, applyKey, charStatuses, initState } from "./typing";
+import { applyBackspace, applyKey, applyTab, charStatuses, initState } from "./typing";
 
 describe("applyKey", () => {
   it("첫 printable 키에서 startedAt 기록", () => {
@@ -37,6 +37,30 @@ describe("applyKey", () => {
     s = applyKey(s, "\n");
     expect(s.input).toBe("a\n");
     expect(s.correctKeys).toBe(2);
+  });
+});
+
+describe("applyTab", () => {
+  it("커서 위치의 들여쓰기 공백을 한 번에 입력(전부 정타 처리)", () => {
+    let s = applyKey(initState("a\n    b"), "a");
+    s = applyKey(s, "\n");
+    s = applyTab(s);
+    expect(s.input).toBe("a\n    ");
+    expect(s.correctKeys).toBe(6);
+    expect(s.wrongKeys).toBe(0);
+  });
+
+  it("들여쓰기 위치가 아니면 무시", () => {
+    const init = initState("abc");
+    expect(applyTab(init)).toBe(init);
+  });
+
+  it("탭 소모로 끝에 도달하면 finishedAt 기록", () => {
+    let s = applyKey(initState("ab  "), "a");
+    s = applyKey(s, "b");
+    s = applyTab(s);
+    expect(s.input).toBe("ab  ");
+    expect(s.finishedAt).not.toBeNull();
   });
 });
 
