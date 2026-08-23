@@ -18,8 +18,8 @@ React 19 + Vite + TypeScript + Tailwind v4 + shadcn/ui, Cloudflare Workers 단�
 - `src/features/` — home, langs, play, leaderboard, profile, auth, legal, not-found
 - `src/data/` — `languages.ts`(22개 언어 레지스트리), `categories.ts`(long|practical만 — terms/short는 제거됨), `snippets/{lang}/{long,practical}.ts`
 - `src/engine/` — 순수 TS 타자 엔진(types/typing/stats), TDD로 유지
-- `src/lib/` — `api.ts`(fetch 래퍼, ApiError), `i18n/ko|en|ja.ts`, `personal-best.ts`, `daily.ts`
-- `src/server/` — Worker 엔드포인트(index.ts 라우팅, auth.ts, routes/auth.ts, routes/scores.ts, db/schema.sql)
+- `src/lib/` — `api.ts`(fetch 래퍼, ApiError), `i18n/ko|en|ja.ts`, `personal-best.ts`(로컬 최고기록 localStorage), `daily.ts`(오늘의 문제 시드), `grade.ts`·`use-count-up.ts`(결과 화면 연출)
+- `src/server/` — Worker 엔드포인트(index.ts 라우팅, auth.ts, routes/auth.ts, routes/scores.ts, db/schema.sql). API: `POST /api/auth/register|login|logout`, `GET /api/me`, `POST /api/scores`, `GET /api/leaderboard(/me)`, `GET /api/profile`
 
 ## 스니펫 규칙 (테스트가 강제)
 
@@ -39,4 +39,5 @@ React 19 + Vite + TypeScript + Tailwind v4 + shadcn/ui, Cloudflare Workers 단�
 - 게임 규칙/인증/리더보드 상세: `docs/superpowers/plans/2026-08-22-code-typing-game.md` (구현 계획서, 스펙 참조용)
 - Write 도구 호출 시 filePath와 content 파라미터 교차 사고 이력 있음 — 작성 직후 파일 확인
 - Windows 환경: PowerShell의 `$PID`는 예약변수(다른 이름 사용), `Start-Process "npm"`은 실패 → `cmd.exe /c` 경유
+- API 실측 검증: Playwright 대신 `Invoke-WebRequest -SkipHttpErrorCheck -Uri "http://localhost:8787/..."` 사용(URL 스킴 명시 필수, Secure 쿠키는 Set-Cookie 헤더에서 토큰 추출해 Cookie 헤더로 직접 전송)
 - D1은 `scores`에 카테고리 CHECK(long|practical), 점수 sanity cap(wpm≤350, accuracy≤100, 2초~1시간)과 제출 스로틀(429) 있음 — 서버 로직 변경 시 유지
