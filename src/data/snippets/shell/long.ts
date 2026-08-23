@@ -1,5 +1,5 @@
 export const snippets = [
-  "#!/usr/bin/env bash\nset -euo pipefail\n\nfor f in \"$@\"; do\n  if [[ -f \"$f\" ]]; then\n    gzip -k \"$f\"\n  fi\ndone",
-  "docker ps --filter \"status=running\" --format '{{.Names}}' | sort | uniq",
-  "git log --oneline -20 --author=\"$(git config user.name)\"",
+  "for file in *.log; do\n  [ -e \"$file\" ] || continue\n  size=$(stat -c%s \"$file\")\n  if (( size > 1048576 )); then\n    gzip -9 \"$file\"\n    mv \"${file}.gz\" \"archive/$(date +%Y%m%d)-${file}.gz\"\n    echo \"archived ${file} (${size} bytes)\"\n  else\n    echo \"kept ${file} (${size} bytes)\"\n  fi\ndone",
+  "retries=0\nmax_retries=5\n\nuntil curl -sf --max-time 3 http://localhost:3000/health; do\n  retries=$((retries + 1))\n  if (( retries >= max_retries )); then\n    echo \"service did not become healthy\" >&2\n    exit 1\n  fi\n  echo \"attempt ${retries}/${max_retries} failed, retrying in 2s\"\n  sleep 2\ndone\n\necho \"healthy after ${retries} retries\"",
+  "target=\"${1:-.}\"\n\ncd \"$target\" || exit 1\n\nfind . -maxdepth 1 -type f | while read -r file; do\n  ext=\"${file##*.}\"\n  case \"$ext\" in\n    jpg|png|gif) dir=\"images\" ;;\n    mp4|mkv)     dir=\"videos\" ;;\n    pdf|docx)    dir=\"documents\" ;;\n    *)           dir=\"other\" ;;\n  esac\n  mkdir -p \"$dir\"\n  mv \"$file\" \"$dir/\"\n  echo \"moved $(basename \"$file\") -> $dir/\"\ndone",
 ];

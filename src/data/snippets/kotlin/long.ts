@@ -1,5 +1,5 @@
 export const snippets = [
-  "data class User(\n    val id: Int,\n    val name: String,\n)\n\nfun greet(user: User): String {\n    return \"Hello, ${user.name}!\"\n}",
-  "val numbers = listOf(1, 2, 3, 4, 5)\nval evens = numbers.filter { it % 2 == 0 }",
-  "suspend fun fetchUser(id: Int): User {\n    val response = client.get(\"$apiUrl/users/$id\")\n    return response.body()\n}",
+  "sealed interface ApiResult<out T> {\n    data class Success<T>(val data: T) : ApiResult<T>\n    data class Failure(val message: String) : ApiResult<Nothing>\n}\n\nfun fetchProfile(id: Int): ApiResult<String> {\n    return if (id <= 0) {\n        ApiResult.Failure(\"invalid id: \" + id)\n    } else {\n        ApiResult.Success(\"user-\" + id)\n    }\n}\n\nfun main() {\n    when (val result = fetchProfile(7)) {\n        is ApiResult.Success -> println(\"loaded \" + result.data)\n        is ApiResult.Failure -> println(\"failed: \" + result.message)\n    }\n}",
+  "fun List<Int>.runningTotal(): List<Int> {\n    val out = mutableListOf<Int>()\n    var acc = 0\n    for (value in this) {\n        acc += value\n        out.add(acc)\n    }\n    return out\n}\n\nfun main() {\n    val sales = listOf(3, 5, 2, 8)\n    println(sales.runningTotal())\n\n    val avg = sales.average()\n    val above = sales.count { it > avg }\n    println(\"average=\" + avg + \" above=\" + above)\n}",
+  "interface Shape {\n    fun area(): Double\n}\n\nclass Circle(val radius: Double) : Shape {\n    override fun area() = Math.PI * radius * radius\n}\n\nclass Rect(val w: Double, val h: Double) : Shape {\n    override fun area() = w * h\n}\n\nfun main() {\n    val shapes = listOf(Circle(2.0), Rect(3.0, 4.0))\n    shapes.forEach { println(\"area = \" + it.area()) }\n}",
 ];

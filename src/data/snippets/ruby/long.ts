@@ -1,5 +1,5 @@
 export const snippets = [
-  "class Stack\n  def initialize\n    @items = []\n  end\n\n  def push(item)\n    @items << item\n    self\n  end\n\n  def pop\n    @items.pop\n  end\nend",
-  "prices = orders.each_with_object({}) do |order, acc|\n  acc[order.customer] ||= 0\n  acc[order.customer] += order.total\nend",
-  "def slugify(title)\n  title.downcase.strip.gsub(/[^a-z0-9]+/, '-').gsub(/^-|-$/, '')\nend",
+  "class Todo\n  attr_reader :title\n\n  def initialize(title)\n    @title = title\n    @done = false\n  end\n\n  def complete!\n    @done = true\n    self\n  end\n\n  def done?\n    @done\n  end\n\n  def label\n    mark = done? ? 'x' : ' '\n    \"[#{mark}] #{title}\"\n  end\nend\n\ntodos = [Todo.new('learn ruby'), Todo.new('ship it')]\ntodos.first.complete!\ntodos.each { |todo| puts todo.label }",
+  "require 'date'\n\nclass Event\n  attr_reader :name, :starts_at\n\n  def initialize(name, starts_at)\n    raise ArgumentError, 'name is empty' if name.strip.empty?\n\n    @name = name\n    @starts_at = starts_at\n  end\n\n  def upcoming?\n    @starts_at > Date.today\n  end\n\n  def days_away\n    (@starts_at - Date.today).to_i\n  end\n\n  def summary\n    state = upcoming? ? \"in #{days_away}d\" : 'past'\n    \"#{@name} (#{state})\"\n  end\nend\n\nevents = [\n  Event.new('deploy freeze', Date.today + 3),\n  Event.new('retro', Date.today - 1),\n]\nevents.each { |event| puts event.summary }",
+  "module EnumerableStats\n  def summary\n    {\n      count: count,\n      min: min,\n      max: max,\n      average: (sum.to_f / size).round(2),\n    }\n  end\nend\n\nclass Array\n  include EnumerableStats\nend\n\nreadings = [12, 7, 19, 4, 15]\npm readings.summary\n\nwords = %w[alpha beta gamma delta]\nlengths = words.map(&:length)\npm lengths.summary",
 ];

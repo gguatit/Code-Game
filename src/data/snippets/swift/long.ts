@@ -1,5 +1,5 @@
 export const snippets = [
-  "class Stack {\n    private var items: [Int] = []\n\n    mutating func push(_ value: Int) {\n        items.append(value)\n    }\n\n    mutating func pop() -> Int? {\n        guard !items.isEmpty else { return nil }\n        return items.removeLast()\n    }\n}",
-  "let names = [\"charlie\", \"alice\", \"bob\"]\nlet sorted = names.sorted { lhs, rhs in lhs < rhs }",
-  "func fetchUser(id: Int) async throws -> String {\n    let (data, _) = try await URLSession.shared.data(from: url)\n    return String(decoding: data, as: UTF8.self)\n}",
+  "enum NetworkResult {\n    case success(data: String)\n    case failure(code: Int, message: String)\n}\n\nfunc handle(_ result: NetworkResult) {\n    switch result {\n    case .success(let data):\n        print(\"got data:\", data)\n    case .failure(let code, let message):\n        print(\"error\", code, message)\n    }\n}\n\nhandle(.success(data: \"payload\"))\nhandle(.failure(code: 404, message: \"not found\"))",
+  "class Animal {\n    var name: String\n\n    init(name: String) {\n        self.name = name\n    }\n\n    func sound() -> String {\n        return \"...\"\n    }\n\n    func describe() -> String {\n        return name + \" says \" + sound()\n    }\n}\n\nclass Dog: Animal {\n    override func sound() -> String {\n        return \"woof\"\n    }\n}\n\nlet zoo: [Animal] = [Animal(name: \"mystery\"), Dog(name: \"rex\")]\nzoo.forEach { print($0.describe()) }",
+  "func secondLargest<T: Comparable>(_ values: [T]) -> T? {\n    let unique = Array(Set(values)).sorted(by: >)\n    guard unique.count >= 2 else { return nil }\n    return unique[1]\n}\n\nprint(secondLargest([4, 9, 1, 9, 7]))\nprint(secondLargest([\"pear\", \"apple\", \"fig\"]))\nprint(secondLargest([42]))",
 ];

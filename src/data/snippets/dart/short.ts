@@ -1,8 +1,8 @@
 export const snippets = [
-  "final users = <String>{};",
-  "widget.build(context);",
-  "await Future.delayed(const Duration(seconds: 1));",
-  "list.where((x) => x.isEven).toList();",
-  "Map<String, int> counts = {};",
-  "if (obj is User) { ... }",
+  "for (var i = 1; i <= 20; i++) {\n  if (i % 15 == 0) {\n    print('FizzBuzz');\n  } else if (i % 3 == 0) {\n    print('Fizz');\n  } else if (i % 5 == 0) {\n    print('Buzz');\n  } else {\n    print(i);\n  }\n}",
+  "class Rectangle {\n  final double width;\n  final double height;\n\n  const Rectangle(this.width, this.height);\n\n  double get area => width * height;\n\n  Rectangle scaledBy(double factor) =>\n      Rectangle(width * factor, height * factor);\n}\n\nvoid main() {\n  const rect = Rectangle(3, 4);\n  print(rect.area);\n}",
+  "Future<int> fetchScore(String userId) async {\n  await Future.delayed(const Duration(milliseconds: 200));\n  if (userId.isEmpty) {\n    throw StateError('userId is empty');\n  }\n  return userId.length * 42;\n}\n\nvoid main() async {\n  try {\n    final score = await fetchScore('dart-fan');\n    print('score: ' + score.toString());\n  } on StateError catch (e) {\n    print(e.message);\n  }\n}",
+  "final scores = {'ada': 91, 'linus': 87};\n\nfinal best = scores.values.reduce((a, b) => a > b ? a : b);\nfinal sortedNames = scores.keys.toList()..sort();\nfinal average = scores.values.fold(0, (a, b) => a + b) / scores.length;\n\nprint(best);\nprint(sortedNames);\nprint(average);",
+  "enum Status { idle, loading, done, error }\n\nString label(Status status) => switch (status) {\n      Status.idle => 'waiting',\n      Status.loading => 'working...',\n      Status.done => 'finished',\n      Status.error => 'failed',\n    };\n\nvoid main() {\n  print(label(Status.loading));\n}",
+  "sealed class Shape {}\n\nclass Circle extends Shape {\n  final double radius;\n  Circle(this.radius);\n}\n\nclass Square extends Shape {\n  final double side;\n  Square(this.side);\n}\n\ndouble area(Shape shape) => switch (shape) {\n      Circle(:final radius) => 3.14159 * radius * radius,\n      Square(:final side) => side * side,\n    };\n\nvoid main() {\n  print(area(Circle(2)));\n  print(area(Square(3)));\n}",
 ];
