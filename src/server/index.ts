@@ -12,8 +12,8 @@ export default {
       if (p === "/api/auth/login" && request.method === "POST") return login(request, env);
       if (p === "/api/auth/logout" && request.method === "POST") return logout(request, env);
       if (p === "/api/me" && request.method === "GET") return me(request, env);
-      if (p === "/api/scores" && request.method === "POST") return saveScore();
-      if (p === "/api/leaderboard" && request.method === "GET") return leaderboard();
+      if (p === "/api/scores" && request.method === "POST") return saveScore(request, env);
+      if (p === "/api/leaderboard" && request.method === "GET") return leaderboard(request, env);
       return Response.json({ error: "Not Found" }, { status: 404 });
     } catch (err) {
       console.error(err);
