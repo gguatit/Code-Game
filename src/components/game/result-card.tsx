@@ -4,11 +4,14 @@ import { useAuth } from "@/app/auth-context";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Confetti } from "@/components/game/confetti";
 import type { CategoryId } from "@/data/categories";
 import type { LanguageDef } from "@/data/languages";
 import type { Stats } from "@/engine/types";
 import { api } from "@/lib/api";
+import { grade } from "@/lib/grade";
 import { getBest, isNewRecord, saveBest } from "@/lib/personal-best";
+import { useCountUp } from "@/lib/use-count-up";
 
 interface ResultCardProps {
   stats: Stats;
@@ -26,7 +29,8 @@ function WpmChart({ series }: { series: readonly number[] }) {
     .map((w, i) => `${(i / (series.length - 1)) * 100},${38 - (w / max) * 34}`)
     .join(" ");
   return (
-    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="h-20 w-full text-sky-500">
+    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="h-20 w-full text-amber-500">
+      <polygon points={`0,40 ${pts} 100,40`} fill="currentColor" opacity="0.15" />
       <polyline
         points={pts}
         fill="none"
@@ -45,6 +49,7 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
   const { user } = useAuth();
   const [saveState, setSaveState] = useState<"saving" | "saved" | "error">("saving");
   const requested = useRef(false);
+  const wpmDisplay = useCountUp(stats.wpm);
 
   useEffect(() => {
     saveBest(language.id, category, stats.wpm);
@@ -65,7 +70,10 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
   }, []);
 
   return (
-    <Card className="mx-auto max-w-md text-center">
+    <Card
+      className={`relative mx-auto max-w-md overflow-hidden text-center ${record ? "ring-2 ring-amber-500/50 shadow-[0_0_60px_-15px_rgba(245,158,11,0.5)]" : ""}`}
+    >
+      <Confetti show={record} />
       <CardHeader>
         <CardTitle className="flex items-center justify-center gap-2">
           결과 {record && <Badge>신기록</Badge>}
@@ -80,8 +88,17 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="text-6xl font-bold tabular-nums">{stats.wpm}</div>
-        <div className="text-sm text-muted-foreground">WPM</div>
+        <div>
+          <div className="font-heading text-6xl font-bold tabular-nums text-amber-500">
+            {wpmDisplay}
+          </div>
+          <div className="mt-1 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            WPM
+            <Badge variant="outline" className="font-heading text-amber-500">
+              {grade(stats.wpm)}
+            </Badge>
+          </div>
+        </div>
         <dl className="grid grid-cols-3 gap-2 text-sm">
           <div>
             <dt className="text-muted-foreground">정확도</dt>
