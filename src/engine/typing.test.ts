@@ -31,6 +31,13 @@ describe("applyKey", () => {
     expect(applyKey(init, "Shift")).toBe(init);
     expect(applyKey(init, "F5")).toBe(init);
   });
+
+  it("줄바꿈(Enter)은 타이핑 가능 문자로 처리", () => {
+    let s = applyKey(initState("a\nb"), "a");
+    s = applyKey(s, "\n");
+    expect(s.input).toBe("a\n");
+    expect(s.correctKeys).toBe(2);
+  });
 });
 
 describe("applyBackspace", () => {

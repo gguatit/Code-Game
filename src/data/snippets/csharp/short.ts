@@ -1,8 +1,8 @@
 export const snippets = [
-  'var evens = numbers.Where(n => n % 2 == 0).ToList();',
-  'public string Name { get; init; } = "";',
-  'var dict = new Dictionary<string, int>();',
-  'await Task.WhenAll(tasks);',
-  'var top = scores.OrderByDescending(s => s.Wpm).First();',
-  'list.RemoveAll(item => item.Expired);',
+  "// FizzBuzz with pattern matching over tuples.\nusing System;\n\nfor (var i = 1; i <= 30; i++) {\n    var output = (i % 3, i % 5) switch {\n        (0, 0) => \"FizzBuzz\",\n        (0, _) => \"Fizz\",\n        (_, 0) => \"Buzz\",\n        _      => i.ToString(),\n    };\n    Console.WriteLine(output);\n}",
+  "// Generic retry helper with exponential backoff.\npublic static async Task<T> RetryAsync<T>(\n    Func<Task<T>> action,\n    int attempts = 3,\n    int baseDelayMs = 200) {\n    for (var attempt = 1; ; attempt++) {\n        try {\n            return await action();\n        } catch (Exception) when (attempt < attempts) {\n            await Task.Delay(baseDelayMs * (int)Math.Pow(2, attempt - 1));\n        }\n    }\n}",
+  "// Two-sum using a dictionary of seen values.\npublic static int[]? TwoSum(int[] nums, int target) {\n    var seen = new Dictionary<int, int>();\n    for (var i = 0; i < nums.Length; i++) {\n        if (seen.TryGetValue(target - nums[i], out var j)) {\n            return new[] { j, i };\n        }\n        seen[nums[i]] = i;\n    }\n    return null;\n}",
+  "// Simple LRU cache on top of LinkedList + Dictionary.\npublic sealed class LruCache<TKey, TValue> where TKey : notnull {\n    private readonly int _capacity;\n    private readonly Dictionary<TKey, LinkedListNode<(TKey Key, TValue Value)>> _map = new();\n    private readonly LinkedList<(TKey Key, TValue Value)> _order = new();\n\n    public LruCache(int capacity) => _capacity = capacity;",
+  "// Async stream consumer reading lines as they arrive.\nawait foreach (var line in ReadLinesAsync(File.OpenText(\"input.txt\"))) {\n    if (string.IsNullOrWhiteSpace(line)) continue;\n    Console.WriteLine($\"> {line.Trim()}\");\n}\n\nstatic async IAsyncEnumerable<string> ReadLinesAsync(StreamReader reader) {\n    while (await reader.ReadLineAsync() is { } line) {\n        yield return line;\n    }\n}",
+  "// Binary search tree insert written recursively.\npublic sealed class TreeNode {\n    public int Value;\n    public TreeNode? Left, Right;\n\n    public void Insert(int value) {\n        if (value < Value) {\n            if (Left is null) Left = new TreeNode { Value = value };\n            else Left.Insert(value);\n        } else if (value > Value) {\n            if (Right is null) Right = new TreeNode { Value = value };\n            else Right.Insert(value);\n        }\n    }\n}",
 ];

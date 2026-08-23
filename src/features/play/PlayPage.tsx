@@ -39,14 +39,22 @@ function Play({ language }: { language: LanguageDef }) {
     return () => clearInterval(timer);
   }, [finished, state.startedAt]);
 
-  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>) {
-    if (e.key === "Escape") {
-      restart(category);
-      return;
+  useEffect(() => {
+    if (finished) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        restart(category);
+        return;
+      }
+      if (e.key === " ") e.preventDefault();
+      const key = e.key === "Enter" ? "\n" : e.key;
+      setState((s) => (key === "Backspace" ? applyBackspace(s) : applyKey(s, key)));
     }
-    if (e.key === " ") e.preventDefault();
-    setState((s) => (e.key === "Backspace" ? applyBackspace(s) : applyKey(s, e.key)));
-  }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [finished, category, restart]);
 
   return (
     <div>
@@ -79,17 +87,9 @@ function Play({ language }: { language: LanguageDef }) {
             <StatsBar stats={stats} />
           </div>
           <Card className="mt-4 p-6">
-            <div
-              tabIndex={0}
-              autoFocus
-              onKeyDown={onKeyDown}
-              className="cursor-text outline-none"
-              aria-label="타이핑 입력 영역. 클릭 후 타이핑하세요. Esc로 새 문제."
-            >
-              <TypingArea state={state} />
-            </div>
+            <TypingArea state={state} />
             <p className="mt-6 text-xs text-muted-foreground">
-              Esc: 새 문제 · Backspace: 되돌리기 · 클릭 후 입력하세요
+              Esc: 새 문제 · Enter: 줄바꿈 · Backspace: 되돌리기
             </p>
           </Card>
         </>

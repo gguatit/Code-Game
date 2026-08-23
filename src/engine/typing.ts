@@ -1,6 +1,6 @@
 import type { CharStatus, TypingState } from "./types";
 
-const PRINTABLE = /^[\x20-\x7E]$/;
+const TYPEABLE = /^[\x20-\x7E\n]$/;
 
 export function initState(text: string): TypingState {
   return { text, input: "", startedAt: null, finishedAt: null, correctKeys: 0, wrongKeys: 0 };
@@ -8,7 +8,7 @@ export function initState(text: string): TypingState {
 
 export function applyKey(state: TypingState, key: string): TypingState {
   if (state.finishedAt !== null) return state;
-  if (key.length !== 1 || !PRINTABLE.test(key)) return state;
+  if (key.length !== 1 || !TYPEABLE.test(key)) return state;
 
   const i = state.input.length;
   if (i >= state.text.length) return state;
