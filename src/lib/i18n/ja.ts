@@ -79,6 +79,7 @@ const ja: Dict = {
   "board.langCol": "挑戦言語",
   "board.me": "自分",
 
+  "profile.all": "全て",
   "profile.title": "マイ記録",
   "profile.of": "{name}さんの練習記録",
   "profile.loading": "読み込み中...",

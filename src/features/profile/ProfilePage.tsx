@@ -6,6 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { WpmChart } from "@/components/game/wpm-chart";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CATEGORIES } from "@/data/categories";
+import {
   Table,
   TableBody,
   TableCell,
@@ -20,6 +28,8 @@ export function ProfilePage() {
   const { user, loading } = useAuth();
   const { t, locale } = useT();
   const [data, setData] = useState<ProfileData | null>(null);
+  const [langFilter, setLangFilter] = useState("all");
+  const [catFilter, setCatFilter] = useState("all");
 
   useEffect(() => {
     if (!user) return;
@@ -32,6 +42,14 @@ export function ProfilePage() {
     data?.best.map((b) => [`${b.language}:${b.category}`, b.wpm] as const)
   );
   const playedLangs = [...new Set(data?.best.map((b) => b.language) ?? [])];
+  // 시간순(오래된→최신)으로 뒤집어 그래프 왼쪽이 과거
+  const chartEntries = (data?.recent ?? [])
+    .filter(
+      (r) =>
+        (langFilter === "all" || r.language === langFilter) &&
+        (catFilter === "all" || r.category === catFilter)
+    )
+    .reverse();
 
   return (
     <div className="space-y-6">
@@ -72,7 +90,70 @@ export function ProfilePage() {
               <h2 className="mb-3 text-lg font-semibold">{t("profile.trend")}</h2>
               <Card>
                 <CardContent className="pt-6">
-                  <WpmChart series={[...data.recent].reverse().map((r) => r.wpm)} />
+                  <div className="mb-4 flex flex-wrap gap-2">
+                    <Select value={langFilter} onValueChange={setLangFilter}>
+                      <SelectTrigger className="h-8 w-[150px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">{t("profile.all")}</SelectItem>
+                        {playedLangs.map((l) => (
+                          <SelectItem key={l} value={l}>
+                            {getLanguage(l)?.name ?? l}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Select value={catFilter} onValueChange={setCatFilter}>
+                      <SelectTrigger className="h-8 w-[120px]">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">{t("profile.all")}</SelectItem>
+                        {CATEGORIES.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>
+                            {t(`cat.${c.id}` as "cat.long")}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  {chartEntries.length > 1 ? (
+                    <>
+                      <div className="mb-1 flex items-center gap-4 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1.5">
+                          <span className="size-2 rounded-full bg-sky-500" />
+                          {t("stats.wpm")}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <span className="size-2 rounded-full bg-emerald-500" />
+                          {t("stats.accuracy")}
+                        </span>
+                      </div>
+                      <WpmChart
+                        series={chartEntries.map((r) => r.wpm)}
+                        accuracySeries={chartEntries.map((r) => r.accuracy)}
+                      />
+                      <div className="mt-1 flex justify-between text-xs text-muted-foreground tabular-nums">
+                        {[
+                          ...new Set([
+                            0,
+                            Math.floor(chartEntries.length / 3),
+                            Math.floor((chartEntries.length * 2) / 3),
+                            chartEntries.length - 1,
+                          ]),
+                        ].map((i) => (
+                          <span key={i}>
+                            {new Date(chartEntries[i].createdAt).toLocaleDateString(locale)}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="py-6 text-center text-sm text-muted-foreground">
+                      {t("board.empty")}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </section>

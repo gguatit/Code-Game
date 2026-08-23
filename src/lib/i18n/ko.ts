@@ -78,6 +78,7 @@ const ko = {
   "board.langCol": "도전 언어",
   "board.me": "나",
 
+  "profile.all": "전체",
   "profile.title": "내 기록",
   "profile.of": "{name}님의 연습 기록",
   "profile.loading": "불러오는 중...",

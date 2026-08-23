@@ -80,6 +80,7 @@ const en: Dict = {
   "board.langCol": "Challenged",
   "board.me": "Me",
 
+  "profile.all": "All",
   "profile.title": "My stats",
   "profile.of": "{name}'s practice records",
   "profile.loading": "Loading...",
