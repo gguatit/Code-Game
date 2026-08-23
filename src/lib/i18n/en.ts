@@ -22,6 +22,7 @@ const en: Dict = {
   "home.heroLine2": "with real code",
   "home.heroDesc":
     "Race on the leaderboard with WPM and accuracy across long-form and practical snippets in 22 languages.",
+  "home.guestNotice": "Scores aren't saved for guests.",
   "home.start": "Start practicing",
   "home.random": "Random challenge",
   "home.daily": "Daily challenge",

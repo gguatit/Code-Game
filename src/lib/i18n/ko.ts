@@ -21,6 +21,7 @@ const ko = {
   "home.heroLine2": "당신의 타자 속도",
   "home.heroDesc":
     "22개 언어의 장문·실전 코드로 WPM과 정확도를 기록하고 리더보드에서 겨뤄보세요.",
+  "home.guestNotice": "비회원은 기록이 저장되지 않습니다.",
   "home.start": "연습 시작하기",
   "home.random": "랜덤 도전",
   "home.daily": "오늘의 문제",

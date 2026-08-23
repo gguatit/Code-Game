@@ -22,6 +22,7 @@ const ja: Dict = {
   "home.heroLine2": "あなたのタイピング速度",
   "home.heroDesc":
     "22言語の長文・実践コードでWPMと正確性を記録し、リーダーボードで競いましょう。",
+  "home.guestNotice": "非会員の記録は保存されません。",
   "home.start": "練習を始める",
   "home.random": "ランダム挑戦",
   "home.daily": "今日の問題",

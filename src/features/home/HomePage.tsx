@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, CalendarDays, Dices, Keyboard, ListChecks, Trophy } from "lucide-react";
+import { ArrowRight, CalendarDays, Dices, Info, Keyboard, ListChecks, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LangBadge } from "@/components/game/lang-badge";
 import { LANGUAGES } from "@/data/languages";
 import { useT } from "@/app/locale";
+import { useAuth } from "@/app/auth-context";
 import { dailyChallenge } from "@/lib/daily";
 import { TypingDemo } from "./TypingDemo";
 import { TopPlayers } from "./TopPlayers";
@@ -22,6 +23,7 @@ function SectionHeader({ comment, title }: { comment: string; title: string }) {
 export function HomePage() {
   const navigate = useNavigate();
   const { t } = useT();
+  const { user } = useAuth();
 
   const randomStart = () => {
     const lang = LANGUAGES[Math.floor(Math.random() * LANGUAGES.length)];
@@ -74,6 +76,15 @@ export function HomePage() {
               </Link>
             </Button>
           </div>
+          {!user && (
+            <p className="mt-4 flex items-center gap-1.5 text-xs text-muted-foreground max-lg:justify-center lg:justify-start">
+              <Info className="size-3.5 shrink-0" />
+              {t("home.guestNotice")}{" "}
+              <Link to="/login" className="underline underline-offset-2 transition-colors hover:text-sky-500">
+                {t("nav.login")}
+              </Link>
+            </p>
+          )}
         </div>
 
         <TypingDemo />
