@@ -81,6 +81,17 @@ export function SignupPage() {
             <Button type="submit" disabled={submitting}>
               가입하기
             </Button>
+            <p className="text-xs text-muted-foreground">
+              가입하면{" "}
+              <Link to="/terms" className="underline underline-offset-4">
+                이용약관
+              </Link>
+              과{" "}
+              <Link to="/privacy" className="underline underline-offset-4">
+                개인정보 처리방침
+              </Link>
+              에 동의하는 것으로 간주됩니다.
+            </p>
           </form>
         </CardContent>
         <CardFooter>

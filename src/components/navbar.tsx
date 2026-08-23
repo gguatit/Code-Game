@@ -36,6 +36,12 @@ export function Navbar() {
           <Link to="/leaderboard" className="transition-colors hover:text-foreground">
             리더보드
           </Link>
+          <Link to="/terms" className="transition-colors hover:text-foreground">
+            이용약관
+          </Link>
+          <Link to="/privacy" className="transition-colors hover:text-foreground">
+            개인정보 처리방침
+          </Link>
         </nav>
         <div className="ml-auto flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={toggle} aria-label="테마 전환">
