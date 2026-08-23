@@ -20,13 +20,14 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CATEGORIES, type CategoryId } from "@/data/categories";
 import { LANGUAGES } from "@/data/languages";
-import { api, type LeaderboardEntry } from "@/lib/api";
+import { api, type LeaderboardEntry, type MyRank } from "@/lib/api";
 
 export function LeaderboardPage() {
   const { user } = useAuth();
   const [category, setCategory] = useState<CategoryId>("long");
   const [language, setLanguage] = useState<string>("all");
   const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null);
+  const [rank, setRank] = useState<MyRank | null>(null);
 
   useEffect(() => {
     let stale = false;
@@ -39,6 +40,18 @@ export function LeaderboardPage() {
       stale = true;
     };
   }, [category, language]);
+
+  useEffect(() => {
+    if (!user) return;
+    let stale = false;
+    api
+      .myRank(category, language === "all" ? undefined : language)
+      .then((r) => !stale && setRank(r))
+      .catch(() => !stale && setRank(null));
+    return () => {
+      stale = true;
+    };
+  }, [user, category, language]);
 
   return (
     <div className="space-y-6">
@@ -71,6 +84,13 @@ export function LeaderboardPage() {
           </SelectContent>
         </Select>
       </div>
+
+      {user && rank && rank.rank !== null && (
+        <p className="text-sm text-muted-foreground">
+          내 순위: <span className="font-semibold text-foreground">{rank.rank}위</span> / 총{" "}
+          {rank.total}명 참여
+        </p>
+      )}
 
       {entries === null ? (
         <Card>

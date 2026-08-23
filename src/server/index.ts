@@ -1,6 +1,6 @@
 import { Env } from "./types";
 import { register, login, logout, me } from "./routes/auth";
-import { saveScore, leaderboard } from "./routes/scores";
+import { saveScore, leaderboard, myRank, myScores } from "./routes/scores";
 
 export default {
   async fetch(request, env): Promise<Response> {
@@ -14,6 +14,8 @@ export default {
       if (p === "/api/me" && request.method === "GET") return me(request, env);
       if (p === "/api/scores" && request.method === "POST") return saveScore(request, env);
       if (p === "/api/leaderboard" && request.method === "GET") return leaderboard(request, env);
+      if (p === "/api/leaderboard/me" && request.method === "GET") return myRank(request, env);
+      if (p === "/api/profile" && request.method === "GET") return myScores(request, env);
       return Response.json({ error: "Not Found" }, { status: 404 });
     } catch (err) {
       console.error(err);

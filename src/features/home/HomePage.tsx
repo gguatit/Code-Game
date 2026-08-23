@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Dices, Keyboard, ListChecks, Trophy } from "lucide-react";
+import { ArrowRight, CalendarDays, Dices, Keyboard, ListChecks, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/logo";
 import { LangBadge } from "@/components/game/lang-badge";
 import { LANGUAGES } from "@/data/languages";
+import { dailyChallenge } from "@/lib/daily";
 import { TypingDemo } from "./TypingDemo";
 import { TopPlayers } from "./TopPlayers";
 
@@ -23,6 +24,8 @@ export function HomePage() {
     navigate(`/play/${lang.id}?category=${cat}`);
   };
 
+  const daily = dailyChallenge();
+
   return (
     <div className="flex flex-col items-center py-16 text-center">
       <Logo className="size-28 text-foreground" />
@@ -41,6 +44,12 @@ export function HomePage() {
         <Button size="lg" variant="outline" onClick={randomStart}>
           <Dices />
           랜덤 도전
+        </Button>
+        <Button asChild size="lg" variant="outline">
+          <Link to={`/play/${daily.langId}?category=${daily.category}&daily=1`}>
+            <CalendarDays />
+            오늘의 문제
+          </Link>
         </Button>
         <Button asChild size="lg" variant="outline">
           <Link to="/leaderboard">

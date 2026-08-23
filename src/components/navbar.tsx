@@ -64,7 +64,7 @@ export function Navbar() {
                   {user.displayName}
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/leaderboard">내 기록</Link>
+                  <Link to="/profile">내 기록</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onLogout}>
                   <LogOut className="size-4" /> 로그아웃

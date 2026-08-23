@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import { ResultCard } from "@/components/game/result-card";
 import { StatsBar } from "@/components/game/stats-bar";
@@ -11,6 +11,7 @@ import { getSnippets, type Snippet } from "@/data/snippets";
 import { computeStats } from "@/engine/stats";
 import { applyBackspace, applyKey, applyTab, initState } from "@/engine/typing";
 import type { TypingState } from "@/engine/types";
+import { pickDaily } from "@/lib/daily";
 
 const pickSnippet = (snippets: readonly Snippet[]) =>
   snippets[Math.floor(Math.random() * snippets.length)]!;
@@ -19,32 +20,53 @@ function Play({ language }: { language: LanguageDef }) {
   // ponytail: LanguageDef.id는 string이지만 스니펫 레지스트리 키와 실제로 동일 — 캐스팅 한 줄로 타협
   const langId = language.id as Parameters<typeof getSnippets>[0];
   const [searchParams] = useSearchParams();
+  const daily = searchParams.get("daily") === "1";
   const initialCategory: CategoryId = searchParams.get("category") === "practical" ? "practical" : "long";
   const [category, setCategory] = useState<CategoryId>(initialCategory);
-  const [state, setState] = useState<TypingState>(() =>
-    initState(pickSnippet(getSnippets(langId, initialCategory))),
+
+  const chooseSnippet = useCallback(
+    (cat: CategoryId): string => {
+      const snippets = getSnippets(langId, cat);
+      return daily ? pickDaily(snippets, `${langId}:${cat}`) : pickSnippet(snippets);
+    },
+    [langId, daily],
   );
+
+  const [state, setState] = useState<TypingState>(() => initState(chooseSnippet(initialCategory)));
+  const [wpmSeries, setWpmSeries] = useState<number[]>([]);
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   const finished = state.finishedAt !== null;
   const stats = computeStats(state);
 
   const restart = useCallback(
     (cat: CategoryId) => {
-      setState(initState(pickSnippet(getSnippets(langId, cat))));
+      setWpmSeries([]);
+      setState(initState(chooseSnippet(cat)));
     },
-    [langId],
+    [chooseSnippet],
   );
 
   useEffect(() => {
     if (finished || state.startedAt === null) return;
-    const timer = setInterval(() => setState((s) => ({ ...s })), 250);
+    const timer = setInterval(() => {
+      setState((s) => ({ ...s }));
+      setWpmSeries((prev) => [...prev.slice(-119), computeStats(stateRef.current).wpm]);
+    }, 250);
     return () => clearInterval(timer);
   }, [finished, state.startedAt]);
 
   useEffect(() => {
-    if (finished) return;
     function onKey(e: KeyboardEvent) {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
+      if (finished) {
+        if (e.key === "Enter" || e.key === "Escape") {
+          e.preventDefault();
+          restart(category);
+        }
+        return;
+      }
       if (e.key === "Escape") {
         e.preventDefault();
         restart(category);
@@ -66,7 +88,14 @@ function Play({ language }: { language: LanguageDef }) {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-bold tracking-tight">{language.name}</h1>
+        <h1 className="text-2xl font-bold tracking-tight">
+          {language.name}
+          {daily && (
+            <span className="ml-3 align-middle text-sm font-normal text-muted-foreground">
+              오늘의 문제
+            </span>
+          )}
+        </h1>
         <Tabs
           value={category}
           onValueChange={(v) => {
@@ -86,7 +115,13 @@ function Play({ language }: { language: LanguageDef }) {
 
       {finished ? (
         <div className="mt-8">
-          <ResultCard stats={stats} language={language} category={category} onRestart={() => restart(category)} />
+          <ResultCard
+            stats={stats}
+            language={language}
+            category={category}
+            series={wpmSeries}
+            onRestart={() => restart(category)}
+          />
         </div>
       ) : (
         <>

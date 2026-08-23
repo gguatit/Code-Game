@@ -4,6 +4,7 @@ import { HomePage } from "@/features/home/HomePage";
 import { LangsPage } from "@/features/langs/LangsPage";
 import { PlayPage } from "@/features/play/PlayPage";
 import { LeaderboardPage } from "@/features/leaderboard/LeaderboardPage";
+import { ProfilePage } from "@/features/profile/ProfilePage";
 import { LoginPage } from "@/features/auth/LoginPage";
 import { SignupPage } from "@/features/auth/SignupPage";
 import { PrivacyPage } from "@/features/legal/PrivacyPage";
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       { path: "/langs", element: <LangsPage /> },
       { path: "/play/:lang", element: <PlayPage /> },
       { path: "/leaderboard", element: <LeaderboardPage /> },
+      { path: "/profile", element: <ProfilePage /> },
       { path: "/login", element: <LoginPage /> },
       { path: "/signup", element: <SignupPage /> },
       { path: "/privacy", element: <PrivacyPage /> },

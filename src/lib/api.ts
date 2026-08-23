@@ -31,6 +31,24 @@ export interface LeaderboardEntry {
   wpm: number;
 }
 
+export interface MyRank {
+  rank: number | null;
+  total: number | null;
+}
+
+export interface ProfileData {
+  totals: { games: number; totalMs: number };
+  best: { language: string; category: string; wpm: number }[];
+  recent: {
+    category: string;
+    language: string;
+    wpm: number;
+    accuracy: number;
+    durationMs: number;
+    createdAt: string;
+  }[];
+}
+
 export const api = {
   me: async (): Promise<SessionUser | null> => {
     const r = await fetch("/api/me");
@@ -50,4 +68,16 @@ export const api = {
     fetch(`/api/leaderboard?category=${category}${language ? `&language=${language}` : ""}`).then(
       (r) => data<{ entries: LeaderboardEntry[] }>(r)
     ),
+  myRank: async (category: string, language?: string): Promise<MyRank | null> => {
+    const r = await fetch(
+      `/api/leaderboard/me?category=${category}${language ? `&language=${language}` : ""}`
+    );
+    if (!r.ok) return null;
+    return data<MyRank>(r);
+  },
+  profile: async (): Promise<ProfileData | null> => {
+    const r = await fetch("/api/profile");
+    if (!r.ok) return null;
+    return data<ProfileData>(r);
+  },
 };
