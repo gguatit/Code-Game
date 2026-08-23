@@ -41,16 +41,50 @@ describe("snippets", () => {
     }
   });
 
+  // 모든 문제 길이 통일: 이 밴드를 벗어나면 장문/실전 불일치가 재발한다
+  const LINE_MIN = 26;
+  const LINE_MAX = 36;
+
+  it("every snippet is within the length band", () => {
+    for (const lang of LANGUAGES) {
+      for (const cat of CATEGORIES) {
+        for (const s of getSnippets(lang.id, cat.id)) {
+          const lines = s.split("\n").length;
+          expect(
+            lines,
+            `${lang.id}/${cat.id}: ${lines} lines`
+          ).toBeGreaterThanOrEqual(LINE_MIN);
+          expect(
+            lines,
+            `${lang.id}/${cat.id}: ${lines} lines`
+          ).toBeLessThanOrEqual(LINE_MAX);
+        }
+      }
+    }
+  });
+
+  it("every snippet is ASCII only", () => {
+    for (const lang of LANGUAGES) {
+      for (const cat of CATEGORIES) {
+        for (const s of getSnippets(lang.id, cat.id)) {
+          expect(s).toMatch(/^[\x20-\x7E\n\t]*$/);
+        }
+      }
+    }
+  });
+
   it("brackets are balanced in every snippet", () => {
     const pairs: Record<string, string> = { ")": "(", "]": "[", "}": "{" };
     for (const lang of LANGUAGES) {
       for (const cat of CATEGORIES) {
         for (const s of getSnippets(lang.id, cat.id)) {
           // 문자열 리터럴 내용은 무시하고 코드 구조의 괄호만 검사
+          // - \( 등 괄호 앞 백슬래시(Haskell 람다)는 제거하지 않음
+          // - 식별자 뒤 어포스트로피(foldl' 같은 prime)는 문자열 시작으로 보지 않음
           const stripped = s
-            .replace(/\\./g, "")
+            .replace(/\\(?![([{)\]}])/g, "")
             .replace(/"[^"\n]*"/g, "")
-            .replace(/'[^'\n]*'/g, "");
+            .replace(/(?<![\w])'[^'\n]*'/g, "");
           const stack: string[] = [];
           for (const ch of stripped) {
             if ("([{".includes(ch)) {
