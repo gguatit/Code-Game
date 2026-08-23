@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import type { CharStatus, TypingState } from "@/engine/types";
 import { charStatuses } from "@/engine/typing";
 
@@ -29,6 +30,24 @@ export function TypingArea({ state }: { state: TypingState }) {
   const showCaret = state.finishedAt === null;
   const lines = toLines(state.text);
   const progress = Math.min((state.input.length / state.text.length) * 100, 100);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const activeLine = lines.findIndex(
+    (l) => state.input.length >= l.start && state.input.length <= l.end
+  );
+
+  // 현재 줄이 박스 안에서 항상 보이도록 내부 스크롤만 조정(페이지 스크롤 간섭 없음)
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!box || !showCaret || activeLine < 0) return;
+    const el = box.querySelector<HTMLElement>(`[data-line="${activeLine}"]`);
+    if (!el) return;
+    const pad = el.offsetHeight;
+    const top = el.offsetTop - pad;
+    const bottom = el.offsetTop + el.offsetHeight + pad;
+    if (top < box.scrollTop) box.scrollTop = Math.max(top, 0);
+    else if (bottom > box.scrollTop + box.clientHeight)
+      box.scrollTop = bottom - box.clientHeight;
+  }, [state.input.length, activeLine, showCaret]);
 
   return (
     <div>
@@ -38,11 +57,15 @@ export function TypingArea({ state }: { state: TypingState }) {
           style={{ width: `${progress}%` }}
         />
       </div>
-      <div aria-label="타이핑할 코드" className="font-mono text-lg leading-relaxed">
+      <div
+        ref={boxRef}
+        aria-label="타이핑할 코드"
+        className="relative max-h-[60vh] overflow-y-auto font-mono text-lg leading-relaxed [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {lines.map((line, li) => {
           const caretAtEnd = showCaret && state.input.length >= line.start && state.input.length <= line.end;
           return (
-            <div key={li} className="flex">
+            <div key={li} data-line={li} className="flex">
               <span className="w-8 shrink-0 select-none text-right font-mono text-sm leading-relaxed text-muted-foreground/40">
                 {li + 1}
               </span>
