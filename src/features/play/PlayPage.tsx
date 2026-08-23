@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Navigate, useParams } from "react-router-dom";
+import { Navigate, useParams, useSearchParams } from "react-router-dom";
 import { ResultCard } from "@/components/game/result-card";
 import { StatsBar } from "@/components/game/stats-bar";
 import { TypingArea } from "@/components/game/typing-area";
@@ -18,9 +18,11 @@ const pickSnippet = (snippets: readonly Snippet[]) =>
 function Play({ language }: { language: LanguageDef }) {
   // ponytail: LanguageDef.id는 string이지만 스니펫 레지스트리 키와 실제로 동일 — 캐스팅 한 줄로 타협
   const langId = language.id as Parameters<typeof getSnippets>[0];
-  const [category, setCategory] = useState<CategoryId>("long");
+  const [searchParams] = useSearchParams();
+  const initialCategory: CategoryId = searchParams.get("category") === "practical" ? "practical" : "long";
+  const [category, setCategory] = useState<CategoryId>(initialCategory);
   const [state, setState] = useState<TypingState>(() =>
-    initState(pickSnippet(getSnippets(langId, "long"))),
+    initState(pickSnippet(getSnippets(langId, initialCategory))),
   );
 
   const finished = state.finishedAt !== null;
