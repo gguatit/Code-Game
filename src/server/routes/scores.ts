@@ -135,7 +135,7 @@ export async function myRank(request: Request, env: Env): Promise<Response> {
     .first<{ total: number }>();
   const betterRow = await env.DB.prepare(
     `SELECT COUNT(*) AS n FROM (
-       SELECT user_id FROM scores WHERE category = ?${langCond}
+       SELECT user_id FROM scores s WHERE s.category = ?${langCond}
        GROUP BY user_id HAVING MAX(wpm) > ?
      )`
   )
