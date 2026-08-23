@@ -27,7 +27,7 @@ export function Navbar() {
       <div className="mx-auto flex h-14 max-w-5xl items-center gap-6 px-4">
         <Link to="/" className="flex items-center gap-2 text-foreground">
           <Logo className="size-7" />
-          <span className="font-mono text-base font-bold tracking-tight">Code-Game</span>
+          <span className="font-mono text-base font-bold tracking-tight">CoffeeToCode</span>
         </Link>
         <nav className="flex items-center gap-4 text-sm text-muted-foreground">
           <Link to="/langs" className="transition-colors hover:text-foreground">

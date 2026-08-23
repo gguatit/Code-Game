@@ -9,7 +9,7 @@ import { CATEGORIES, type CategoryId } from "@/data/categories";
 import { getLanguage, type LanguageDef } from "@/data/languages";
 import { getSnippets, type Snippet } from "@/data/snippets";
 import { computeStats } from "@/engine/stats";
-import { applyBackspace, applyKey, initState } from "@/engine/typing";
+import { applyBackspace, applyKey, applyTab, initState } from "@/engine/typing";
 import type { TypingState } from "@/engine/types";
 
 const pickSnippet = (snippets: readonly Snippet[]) =>
@@ -46,6 +46,11 @@ function Play({ language }: { language: LanguageDef }) {
       if (e.key === "Escape") {
         e.preventDefault();
         restart(category);
+        return;
+      }
+      if (e.key === "Tab") {
+        e.preventDefault();
+        setState(applyTab);
         return;
       }
       if (e.key === " ") e.preventDefault();
@@ -89,7 +94,7 @@ function Play({ language }: { language: LanguageDef }) {
           <Card className="mt-4 p-6">
             <TypingArea state={state} />
             <p className="mt-6 text-xs text-muted-foreground">
-              Esc: 새 문제 · Enter: 줄바꿈 · Backspace: 되돌리기
+              Esc: 새 문제 · Tab: 들여쓰기 · Enter: 줄바꿈 · Backspace: 되돌리기
             </p>
           </Card>
         </>

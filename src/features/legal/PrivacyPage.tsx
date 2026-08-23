@@ -10,7 +10,7 @@ export function PrivacyPage() {
 
       <section className="space-y-3 text-sm leading-relaxed">
         <p>
-          Code-Game(이하 &quot;서비스&quot;)는 이용자의 개인정보를 소중하게 생각하며, 개인정보보호법
+          CoffeeToCode(이하 &quot;서비스&quot;)는 이용자의 개인정보를 소중하게 생각하며, 개인정보보호법
           등 관련 법령을 준수합니다. 본 처리방침은 서비스가 수집하는 정보와 그 이용 방법을 설명합니다.
         </p>
       </section>

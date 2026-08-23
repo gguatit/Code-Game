@@ -7,7 +7,7 @@ export function HomePage() {
   return (
     <div className="flex flex-col items-center py-16 text-center">
       <Logo className="size-28 text-foreground" />
-      <h1 className="mt-6 text-4xl font-bold tracking-tight">Code-Game</h1>
+      <h1 className="mt-6 text-4xl font-bold tracking-tight">CoffeeToCode</h1>
       <p className="mt-3 max-w-md text-muted-foreground">
         코딩 타자 연습 게임. 용어부터 실전 코드까지, 15개 언어로 속도와 정확도를 기록하세요.
       </p>

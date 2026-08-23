@@ -8,7 +8,7 @@ export function Footer() {
         <div className="flex items-center gap-2">
           <Logo className="size-5" />
           <div>
-            <p className="font-mono text-sm font-semibold text-foreground">Code-Game</p>
+            <p className="font-mono text-sm font-semibold text-foreground">CoffeeToCode</p>
             <p className="text-xs text-muted-foreground">
               개인이 운영하는 비영리 코딩 타자 연습 프로젝트입니다.
             </p>
@@ -33,7 +33,7 @@ export function Footer() {
       </div>
       <div className="border-t">
         <p className="mx-auto max-w-5xl px-4 py-3 text-xs text-muted-foreground">
-          © 2026 Code-Game. 본 사이트는 영리 목적 없이 개인이 운영하며, 광고·추적 쿠키를 사용하지
+          © 2026 CoffeeToCode. 본 사이트는 영리 목적 없이 개인이 운영하며, 광고·추적 쿠키를 사용하지
           않습니다.
         </p>
       </div>

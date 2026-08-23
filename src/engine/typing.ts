@@ -31,6 +31,24 @@ export function applyBackspace(state: TypingState): TypingState {
   return { ...state, input: state.input.slice(0, -1) };
 }
 
+export function applyTab(state: TypingState): TypingState {
+  if (state.finishedAt !== null) return state;
+  const i = state.input.length;
+  if (i >= state.text.length || !/[\t ]/.test(state.text[i]!)) return state;
+
+  let end = i;
+  while (end < state.text.length && /[\t ]/.test(state.text[end]!)) end++;
+  const now = Date.now();
+  return {
+    text: state.text,
+    input: state.text.slice(0, end),
+    startedAt: state.startedAt ?? now,
+    finishedAt: end === state.text.length ? now : null,
+    correctKeys: state.correctKeys + (end - i),
+    wrongKeys: state.wrongKeys,
+  };
+}
+
 export function charStatuses(state: TypingState): CharStatus[] {
   return state.text.split("").map((ch, i) =>
     i >= state.input.length ? "pending" : state.input[i] === ch ? "correct" : "wrong"
