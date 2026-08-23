@@ -117,7 +117,13 @@ export function LeaderboardPage() {
             <TableBody>
               {entries.map((e, i) => (
                 <TableRow key={`${e.displayName}-${i}`}>
-                  <TableCell className="font-medium tabular-nums">{i + 1}</TableCell>
+                  <TableCell
+                    className={`font-heading font-medium tabular-nums ${
+                      ["text-amber-400", "text-zinc-300", "text-orange-600"][i] ?? ""
+                    }`}
+                  >
+                    {i + 1}
+                  </TableCell>
                   <TableCell>
                     {e.displayName}
                     {user?.displayName === e.displayName && (
