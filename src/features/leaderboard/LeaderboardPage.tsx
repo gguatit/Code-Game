@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/auth-context";
+import { useT } from "@/app/locale";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -24,6 +25,7 @@ import { api, type LeaderboardEntry, type MyRank } from "@/lib/api";
 
 export function LeaderboardPage() {
   const { user } = useAuth();
+  const { t } = useT();
   const [category, setCategory] = useState<CategoryId>("long");
   const [language, setLanguage] = useState<string>("all");
   const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null);
@@ -56,8 +58,8 @@ export function LeaderboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">리더보드</h1>
-        <p className="text-sm text-muted-foreground">카테고리·언어별 최고 기록 순위</p>
+        <h1 className="text-2xl font-bold">{t("board.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("board.desc")}</p>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
@@ -65,7 +67,7 @@ export function LeaderboardPage() {
           <TabsList>
             {CATEGORIES.map((c) => (
               <TabsTrigger key={c.id} value={c.id}>
-                {c.name}
+                {t(`cat.${c.id}`)}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -75,7 +77,7 @@ export function LeaderboardPage() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">전체 언어</SelectItem>
+            <SelectItem value="all">{t("board.allLangs")}</SelectItem>
             {LANGUAGES.map((l) => (
               <SelectItem key={l.id} value={l.id}>
                 {l.name}
@@ -85,23 +87,22 @@ export function LeaderboardPage() {
         </Select>
       </div>
 
-      {user && rank && rank.rank !== null && (
+      {user && rank && rank.rank !== null && rank.total !== null && (
         <p className="text-sm text-muted-foreground">
-          내 순위: <span className="font-semibold text-foreground">{rank.rank}위</span> / 총{" "}
-          {rank.total}명 참여
+          {t("board.myRank", { n: rank.rank, m: rank.total })}
         </p>
       )}
 
       {entries === null ? (
         <Card>
           <CardContent className="py-10 text-center text-muted-foreground">
-            불러오는 중...
+            {t("board.loading")}
           </CardContent>
         </Card>
       ) : entries.length === 0 ? (
         <Card>
           <CardContent className="py-10 text-center text-muted-foreground">
-            아직 기록이 없습니다. 첫 기록의 주인이 되어보세요.
+            {t("board.empty")}
           </CardContent>
         </Card>
       ) : (
@@ -109,8 +110,8 @@ export function LeaderboardPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-16">순위</TableHead>
-                <TableHead>닉네임</TableHead>
+                <TableHead className="w-16">{t("board.rankCol")}</TableHead>
+                <TableHead>{t("board.nickCol")}</TableHead>
                 <TableHead className="text-right">WPM</TableHead>
               </TableRow>
             </TableHeader>
@@ -128,7 +129,7 @@ export function LeaderboardPage() {
                     {e.displayName}
                     {user?.displayName === e.displayName && (
                       <Badge variant="outline" className="ml-2">
-                        나
+                        {t("board.me")}
                       </Badge>
                     )}
                   </TableCell>

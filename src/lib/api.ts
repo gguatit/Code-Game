@@ -12,9 +12,17 @@ async function post(path: string, body?: unknown): Promise<Response> {
   });
 }
 
+export class ApiError extends Error {
+  status: number;
+  constructor(status: number, message: string) {
+    super(message);
+    this.status = status;
+  }
+}
+
 async function data<T>(res: Response): Promise<T> {
   const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error((json as { error?: string }).error ?? res.statusText);
+  if (!res.ok) throw new ApiError(res.status, (json as { error?: string }).error ?? res.statusText);
   return json as T;
 }
 

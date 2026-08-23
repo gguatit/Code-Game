@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Trophy } from "lucide-react";
+import { useT } from "@/app/locale";
 import { api, type LeaderboardEntry } from "@/lib/api";
 
 export function TopPlayers() {
   const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null);
+  const { t } = useT();
 
   useEffect(() => {
     let stale = false;
@@ -24,10 +26,10 @@ export function TopPlayers() {
       <div className="mb-4 flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-lg font-semibold">
           <Trophy className="size-5 text-amber-500" />
-          장문 최고 기록
+          {t("top.title")}
         </h2>
         <Link to="/leaderboard" className="text-sm text-muted-foreground hover:text-foreground">
-          전체 보기
+          {t("top.viewAll")}
         </Link>
       </div>
       {entries === null ? (

@@ -12,9 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/app/auth-context";
+import { useT } from "@/app/locale";
+import { ApiError } from "@/lib/api";
 
 export function LoginPage() {
   const { login } = useAuth();
+  const { t } = useT();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +32,11 @@ export function LoginPage() {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "로그인에 실패했습니다");
+      setError(
+        err instanceof ApiError && err.status === 401
+          ? t("auth.badCredentials")
+          : t("auth.failLogin")
+      );
     } finally {
       setSubmitting(false);
     }
@@ -39,13 +46,13 @@ export function LoginPage() {
     <div className="flex justify-center py-12">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">로그인</CardTitle>
-          <CardDescription>기록이 리더보드에 저장됩니다</CardDescription>
+          <CardTitle className="text-2xl">{t("auth.loginTitle")}</CardTitle>
+          <CardDescription>{t("auth.loginDesc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">이메일</Label>
+              <Label htmlFor="email">{t("auth.email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -55,7 +62,7 @@ export function LoginPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">비밀번호</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <Input
                 id="password"
                 type="password"
@@ -66,15 +73,15 @@ export function LoginPage() {
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <Button type="submit" disabled={submitting}>
-              로그인
+              {t("auth.loginBtn")}
             </Button>
           </form>
         </CardContent>
         <CardFooter>
           <p className="text-sm text-muted-foreground">
-            계정이 없나요?{" "}
+            {t("auth.noAccount")}{" "}
             <Link to="/signup" className="text-foreground underline underline-offset-4">
-              회원가입
+              {t("auth.signupBtn")}
             </Link>
           </p>
         </CardFooter>

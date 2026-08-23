@@ -12,9 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/app/auth-context";
+import { useT } from "@/app/locale";
+import { ApiError } from "@/lib/api";
 
 export function SignupPage() {
   const { signup } = useAuth();
+  const { t } = useT();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +33,11 @@ export function SignupPage() {
       await signup(email, password, displayName);
       navigate("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "회원가입에 실패했습니다");
+      setError(
+        err instanceof ApiError && err.status === 409
+          ? t("auth.emailTaken")
+          : t("auth.failSignup")
+      );
     } finally {
       setSubmitting(false);
     }
@@ -40,13 +47,13 @@ export function SignupPage() {
     <div className="flex justify-center py-12">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">회원가입</CardTitle>
-          <CardDescription>가입하면 기록이 리더보드에 저장됩니다</CardDescription>
+          <CardTitle className="text-2xl">{t("auth.signupTitle")}</CardTitle>
+          <CardDescription>{t("auth.signupDesc")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="displayName">닉네임</Label>
+              <Label htmlFor="displayName">{t("auth.nickname")}</Label>
               <Input
                 id="displayName"
                 required
@@ -57,7 +64,7 @@ export function SignupPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">이메일</Label>
+              <Label htmlFor="email">{t("auth.email")}</Label>
               <Input
                 id="email"
                 type="email"
@@ -67,7 +74,7 @@ export function SignupPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">비밀번호</Label>
+              <Label htmlFor="password">{t("auth.password")}</Label>
               <Input
                 id="password"
                 type="password"
@@ -79,26 +86,26 @@ export function SignupPage() {
             </div>
             {error && <p className="text-sm text-red-500">{error}</p>}
             <Button type="submit" disabled={submitting}>
-              가입하기
+              {t("auth.signupBtn")}
             </Button>
             <p className="text-xs text-muted-foreground">
-              가입하면{" "}
+              {t("auth.agreeBefore")}
               <Link to="/terms" className="underline underline-offset-4">
-                이용약관
+                {t("auth.termsLink")}
               </Link>
-              과{" "}
+              {t("auth.agreeMiddle")}
               <Link to="/privacy" className="underline underline-offset-4">
-                개인정보 처리방침
+                {t("auth.privacyLink")}
               </Link>
-              에 동의하는 것으로 간주됩니다.
+              {t("auth.agreeAfter")}
             </p>
           </form>
         </CardContent>
         <CardFooter>
           <p className="text-sm text-muted-foreground">
-            이미 계정이 있나요?{" "}
+            {t("auth.haveAccount")}{" "}
             <Link to="/login" className="text-foreground underline underline-offset-4">
-              로그인
+              {t("auth.loginBtn")}
             </Link>
           </p>
         </CardFooter>

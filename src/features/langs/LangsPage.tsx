@@ -3,14 +3,14 @@ import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { LangBadge } from "@/components/game/lang-badge";
 import { LANGUAGES } from "@/data/languages";
+import { useT } from "@/app/locale";
 
 export function LangsPage() {
+  const { t } = useT();
   return (
     <div>
-      <h1 className="text-2xl font-bold tracking-tight">언어 선택</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        연습할 언어를 선택하세요. 카테고리는 플레이 화면에서 바꿀 수 있습니다.
-      </p>
+      <h1 className="text-2xl font-bold tracking-tight">{t("langs.title")}</h1>
+      <p className="mt-1 text-sm text-muted-foreground">{t("langs.desc")}</p>
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {LANGUAGES.map((l) => (
           <Link key={l.id} to={`/play/${l.id}`} className="focus-visible:outline-none">

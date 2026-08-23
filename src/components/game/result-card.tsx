@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/app/auth-context";
+import { useT } from "@/app/locale";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -47,6 +48,7 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
   const record = useMemo(() => isNewRecord(language.id, category, stats.wpm), []);
   const [best, setBest] = useState<number | null>(() => getBest(language.id, category)?.wpm ?? null);
   const { user } = useAuth();
+  const { t } = useT();
   const [saveState, setSaveState] = useState<"saving" | "saved" | "error">("saving");
   const requested = useRef(false);
   const wpmDisplay = useCountUp(stats.wpm);
@@ -76,14 +78,14 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
       <Confetti show={record} />
       <CardHeader>
         <CardTitle className="flex items-center justify-center gap-2">
-          결과 {record && <Badge>신기록</Badge>}
+          {t("result.title")} {record && <Badge>{t("result.newRecord")}</Badge>}
           {user &&
             (saveState === "saved" ? (
-              <Badge>저장됨</Badge>
+              <Badge>{t("result.saved")}</Badge>
             ) : saveState === "error" ? (
-              <Badge variant="destructive">저장 실패</Badge>
+              <Badge variant="destructive">{t("result.saveFailed")}</Badge>
             ) : (
-              <Badge variant="outline">저장 중...</Badge>
+              <Badge variant="outline">{t("result.saving")}</Badge>
             ))}
         </CardTitle>
       </CardHeader>
@@ -101,34 +103,34 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
         </div>
         <dl className="grid grid-cols-3 gap-2 text-sm">
           <div>
-            <dt className="text-muted-foreground">정확도</dt>
+            <dt className="text-muted-foreground">{t("result.accuracy")}</dt>
             <dd className="font-semibold tabular-nums">{stats.accuracy}%</dd>
           </div>
           <div>
-            <dt className="text-muted-foreground">시간</dt>
+            <dt className="text-muted-foreground">{t("result.time")}</dt>
             <dd className="font-semibold tabular-nums">{(stats.elapsedMs / 1000).toFixed(1)}s</dd>
           </div>
           <div>
-            <dt className="text-muted-foreground">개인 최고</dt>
+            <dt className="text-muted-foreground">{t("result.best")}</dt>
             <dd className="font-semibold tabular-nums">{best ?? "-"} WPM</dd>
           </div>
         </dl>
         <div>
-          <div className="mb-1 text-xs text-muted-foreground">WPM 추이</div>
+          <div className="mb-1 text-xs text-muted-foreground">{t("result.trend")}</div>
           <WpmChart series={series} />
         </div>
         {!user && (
           <p className="text-sm text-muted-foreground">
             <Link to="/login" className="underline hover:text-foreground">
-              로그인
+              {t("result.signin")}
             </Link>
-            하면 기록이 리더보드에 저장됩니다
+            {t("result.toSaveScores")}
           </p>
         )}
         <div className="flex justify-center gap-2 pt-2">
-          <Button onClick={onRestart}>다시 연습 (Enter)</Button>
+          <Button onClick={onRestart}>{t("result.restart")}</Button>
           <Button variant="outline" asChild>
-            <Link to="/leaderboard">리더보드</Link>
+            <Link to="/leaderboard">{t("result.boardBtn")}</Link>
           </Button>
         </div>
       </CardContent>

@@ -11,6 +11,7 @@ import { getSnippets, type Snippet } from "@/data/snippets";
 import { computeStats } from "@/engine/stats";
 import { applyBackspace, applyKey, applyTab, initState } from "@/engine/typing";
 import type { TypingState } from "@/engine/types";
+import { useT } from "@/app/locale";
 import { pickDaily } from "@/lib/daily";
 
 const pickSnippet = (snippets: readonly Snippet[]) =>
@@ -23,6 +24,7 @@ function Play({ language }: { language: LanguageDef }) {
   const daily = searchParams.get("daily") === "1";
   const initialCategory: CategoryId = searchParams.get("category") === "practical" ? "practical" : "long";
   const [category, setCategory] = useState<CategoryId>(initialCategory);
+  const { t } = useT();
 
   const chooseSnippet = useCallback(
     (cat: CategoryId): string => {
@@ -92,7 +94,7 @@ function Play({ language }: { language: LanguageDef }) {
           {language.name}
           {daily && (
             <span className="ml-3 align-middle text-sm font-normal text-muted-foreground">
-              오늘의 문제
+              {t("home.daily")}
             </span>
           )}
         </h1>
@@ -106,7 +108,7 @@ function Play({ language }: { language: LanguageDef }) {
           <TabsList>
             {CATEGORIES.map((c) => (
               <TabsTrigger key={c.id} value={c.id}>
-                {c.name}
+                {t(`cat.${c.id}`)}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -130,9 +132,7 @@ function Play({ language }: { language: LanguageDef }) {
           </div>
           <Card className="mt-4 p-6">
             <TypingArea state={state} />
-            <p className="mt-6 text-xs text-muted-foreground">
-              Esc: 새 문제 · Tab: 들여쓰기 · Enter: 줄바꿈 · Backspace: 되돌리기
-            </p>
+            <p className="mt-6 text-xs text-muted-foreground">{t("play.hint")}</p>
           </Card>
         </>
       )}
