@@ -29,7 +29,7 @@ function WpmChart({ series }: { series: readonly number[] }) {
     .map((w, i) => `${(i / (series.length - 1)) * 100},${38 - (w / max) * 34}`)
     .join(" ");
   return (
-    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="h-20 w-full text-amber-500">
+    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="h-20 w-full text-sky-500">
       <polygon points={`0,40 ${pts} 100,40`} fill="currentColor" opacity="0.15" />
       <polyline
         points={pts}
@@ -71,7 +71,7 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
 
   return (
     <Card
-      className={`relative mx-auto max-w-md overflow-hidden text-center ${record ? "ring-2 ring-amber-500/50 shadow-[0_0_60px_-15px_rgba(245,158,11,0.5)]" : ""}`}
+      className={`relative mx-auto max-w-md overflow-hidden text-center ${record ? "ring-2 ring-sky-500/50 shadow-[0_0_60px_-15px_rgba(14,165,233,0.5)]" : ""}`}
     >
       <Confetti show={record} />
       <CardHeader>
@@ -89,12 +89,12 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <div className="font-heading text-6xl font-bold tabular-nums text-amber-500">
+          <div className="font-heading text-6xl font-bold tabular-nums text-sky-500">
             {wpmDisplay}
           </div>
           <div className="mt-1 flex items-center justify-center gap-2 text-sm text-muted-foreground">
             WPM
-            <Badge variant="outline" className="font-heading text-amber-500">
+            <Badge variant="outline" className="font-heading text-sky-500">
               {grade(stats.wpm)}
             </Badge>
           </div>

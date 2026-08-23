@@ -21,7 +21,7 @@ export function TypingDemo() {
     <div className="relative mx-auto w-full max-w-xl">
       <div
         aria-hidden="true"
-        className="absolute -inset-4 -z-10 rounded-3xl bg-amber-500/10 blur-2xl"
+        className="absolute -inset-4 -z-10 rounded-3xl bg-sky-500/10 blur-2xl"
       />
       <div className="overflow-hidden rounded-xl border bg-card shadow-lg shadow-black/20 transition-transform duration-300 lg:-rotate-1 lg:hover:rotate-0">
         <div className="flex items-center gap-1.5 border-b px-4 py-2.5">
@@ -39,7 +39,7 @@ export function TypingDemo() {
               <span className="whitespace-pre-wrap">
                 {line}
                 {i === shown.length - 1 && (
-                  <span className="ml-0.5 inline-block h-4 w-[7px] animate-pulse bg-amber-400 align-middle" />
+                  <span className="ml-0.5 inline-block h-4 w-[7px] animate-pulse bg-sky-400 align-middle" />
                 )}
               </span>
             </div>

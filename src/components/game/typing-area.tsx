@@ -34,7 +34,7 @@ export function TypingArea({ state }: { state: TypingState }) {
     <div>
       <div className="mb-4 h-1 overflow-hidden rounded-full bg-muted">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-[width] duration-150"
+          className="h-full rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 transition-[width] duration-150"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -74,7 +74,7 @@ function Caret() {
   return (
     <span
       aria-hidden="true"
-      className="[animation:caret-blink_1s_step-end_infinite] border-l-2 border-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.7)]"
+      className="[animation:caret-blink_1s_step-end_infinite] border-l-2 border-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.7)]"
     />
   );
 }

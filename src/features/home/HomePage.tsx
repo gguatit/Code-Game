@@ -17,7 +17,7 @@ const STEPS = [
 function SectionHeader({ comment, title }: { comment: string; title: string }) {
   return (
     <div className="mb-6 text-left">
-      <div className="font-mono text-xs text-amber-500/80">{comment}</div>
+      <div className="font-mono text-xs text-sky-500/80">{comment}</div>
       <h2 className="mt-1 text-xl font-semibold">{title}</h2>
     </div>
   );
@@ -40,8 +40,8 @@ export function HomePage() {
       <section className="relative grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           <div className="bg-grid absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
-          <div className="absolute -top-24 right-[5%] size-96 rounded-full bg-amber-500/10 blur-3xl" />
-          <div className="absolute bottom-0 left-[5%] size-72 rounded-full bg-orange-600/10 blur-3xl" />
+          <div className="absolute -top-24 right-[5%] size-96 rounded-full bg-sky-500/10 blur-3xl" />
+          <div className="absolute bottom-0 left-[5%] size-72 rounded-full bg-cyan-600/10 blur-3xl" />
         </div>
 
         <div className="text-center lg:text-left">
@@ -93,7 +93,7 @@ export function HomePage() {
           { n: "2", label: "모드 (장문/실전)" },
         ].map((s) => (
           <div key={s.label} className="px-2 text-center">
-            <div className="font-heading text-3xl font-bold text-amber-500">{s.n}</div>
+            <div className="font-heading text-3xl font-bold text-sky-500">{s.n}</div>
             <div className="mt-1 text-xs text-muted-foreground">{s.label}</div>
           </div>
         ))}
@@ -106,7 +106,7 @@ export function HomePage() {
           {STEPS.map((step, i) => (
             <div
               key={step.title}
-              className="rounded-xl border p-5 text-left transition-colors hover:border-amber-500/40 hover:bg-card"
+              className="rounded-xl border p-5 text-left transition-colors hover:border-sky-500/40 hover:bg-card"
             >
               <div className="flex items-center justify-between">
                 <span className="font-heading flex size-8 items-center justify-center rounded-lg bg-primary/10 font-bold text-primary">
@@ -127,7 +127,7 @@ export function HomePage() {
           <SectionHeader comment="// languages" title="지원 언어" />
           <Link
             to="/langs"
-            className="mb-6 flex shrink-0 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-amber-500"
+            className="mb-6 flex shrink-0 items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-sky-500"
           >
             모두 보기
             <ArrowRight className="size-4" />
