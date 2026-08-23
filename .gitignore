@@ -4,3 +4,4 @@ dist
 .superpowers
 *.local
 .dev.vars
+.fva/
