@@ -74,6 +74,7 @@ const ko = {
   "board.empty": "아직 기록이 없습니다. 첫 기록의 주인이 되어보세요.",
   "board.rankCol": "순위",
   "board.nickCol": "닉네임",
+  "board.langCol": "도전 언어",
   "board.me": "나",
 
   "profile.title": "내 기록",
@@ -87,6 +88,7 @@ const ko = {
   "profile.colLongBest": "장문 최고 WPM",
   "profile.colPracBest": "실전 최고 WPM",
   "profile.recentTitle": "최근 기록",
+  "profile.trend": "WPM 추이",
   "profile.colDate": "날짜",
   "profile.colMode": "모드",
   "profile.colWpm": "WPM",

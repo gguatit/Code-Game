@@ -93,7 +93,7 @@ export async function leaderboard(request: Request, env: Env): Promise<Response>
   if (!CATEGORIES.has(category))
     return Response.json({ error: "category 파라미터가 필요합니다" }, { status: 400 });
 
-  let sql = `SELECT u.display_name AS displayName, MAX(s.wpm) AS wpm
+  let sql = `SELECT s.user_id AS userId, u.display_name AS displayName, MAX(s.wpm) AS wpm
              FROM scores s JOIN users u ON u.id = s.user_id WHERE s.category = ?`;
   const binds: (string | number)[] = [category];
   if (language) {
@@ -103,8 +103,34 @@ export async function leaderboard(request: Request, env: Env): Promise<Response>
   sql += " GROUP BY s.user_id ORDER BY wpm DESC LIMIT ?";
   binds.push(limit);
 
-  const { results } = await env.DB.prepare(sql).bind(...binds).all();
-  return Response.json({ entries: results });
+  const { results: rows } = await env.DB.prepare(sql)
+    .bind(...binds)
+    .all<{ userId: number; displayName: string; wpm: number }>();
+
+  // 각 유저가 해당 카테고리에서 도전한 언어 목록
+  const langMap = new Map<number, string[]>();
+  if (rows.length > 0) {
+    const ph = rows.map(() => "?").join(",");
+    const { results: langRows } = await env.DB.prepare(
+      `SELECT user_id, language FROM scores WHERE category = ? AND user_id IN (${ph})
+       GROUP BY user_id, language ORDER BY language`
+    )
+      .bind(category, ...rows.map((r) => r.userId))
+      .all<{ user_id: number; language: string }>();
+    for (const r of langRows) {
+      const list = langMap.get(r.user_id) ?? [];
+      list.push(r.language);
+      langMap.set(r.user_id, list);
+    }
+  }
+
+  return Response.json({
+    entries: rows.map((r) => ({
+      displayName: r.displayName,
+      wpm: r.wpm,
+      languages: langMap.get(r.userId) ?? [],
+    })),
+  });
 }
 
 export async function myRank(request: Request, env: Env): Promise<Response> {
@@ -161,7 +187,7 @@ export async function myScores(request: Request, env: Env): Promise<Response> {
     .all();
   const recent = await env.DB.prepare(
     `SELECT category, language, wpm, accuracy, duration_ms AS durationMs, created_at AS createdAt
-     FROM scores WHERE user_id = ? ORDER BY created_at DESC LIMIT 15`
+     FROM scores WHERE user_id = ? ORDER BY created_at DESC LIMIT 50`
   )
     .bind(user.id)
     .all();

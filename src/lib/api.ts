@@ -37,6 +37,7 @@ export interface ScoreInput {
 export interface LeaderboardEntry {
   displayName: string;
   wpm: number;
+  languages?: string[];
 }
 
 export interface MyRank {

@@ -76,6 +76,7 @@ const en: Dict = {
   "board.empty": "No records yet. Be the first to set one!",
   "board.rankCol": "Rank",
   "board.nickCol": "Nickname",
+  "board.langCol": "Challenged",
   "board.me": "Me",
 
   "profile.title": "My stats",
@@ -89,6 +90,7 @@ const en: Dict = {
   "profile.colLongBest": "Best long-form WPM",
   "profile.colPracBest": "Best practical WPM",
   "profile.recentTitle": "Recent games",
+  "profile.trend": "WPM trend",
   "profile.colDate": "Date",
   "profile.colMode": "Mode",
   "profile.colWpm": "WPM",

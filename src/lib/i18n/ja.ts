@@ -75,6 +75,7 @@ const ja: Dict = {
   "board.empty": "まだ記録がありません。最初の記録を刻みましょう！",
   "board.rankCol": "順位",
   "board.nickCol": "ニックネーム",
+  "board.langCol": "挑戦言語",
   "board.me": "自分",
 
   "profile.title": "マイ記録",
@@ -88,6 +89,7 @@ const ja: Dict = {
   "profile.colLongBest": "長文ベストWPM",
   "profile.colPracBest": "実践ベストWPM",
   "profile.recentTitle": "最近の記録",
+  "profile.trend": "WPM推移",
   "profile.colDate": "日付",
   "profile.colMode": "モード",
   "profile.colWpm": "WPM",

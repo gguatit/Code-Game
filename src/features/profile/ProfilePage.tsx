@@ -4,6 +4,7 @@ import { useAuth } from "@/app/auth-context";
 import { useT } from "@/app/locale";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { WpmChart } from "@/components/game/wpm-chart";
 import {
   Table,
   TableBody,
@@ -65,6 +66,17 @@ export function ProfilePage() {
               <div className="mt-1 text-xs text-muted-foreground">{t("profile.challenged")}</div>
             </div>
           </div>
+
+          {data.recent.length > 1 && (
+            <section>
+              <h2 className="mb-3 text-lg font-semibold">{t("profile.trend")}</h2>
+              <Card>
+                <CardContent className="pt-6">
+                  <WpmChart series={[...data.recent].reverse().map((r) => r.wpm)} />
+                </CardContent>
+              </Card>
+            </section>
+          )}
 
           {playedLangs.length > 0 && (
             <section>

@@ -19,8 +19,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LangBadge } from "@/components/game/lang-badge";
 import { CATEGORIES, type CategoryId } from "@/data/categories";
-import { LANGUAGES } from "@/data/languages";
+import { LANGUAGES, getLanguage } from "@/data/languages";
 import { api, type LeaderboardEntry, type MyRank } from "@/lib/api";
 
 export function LeaderboardPage() {
@@ -112,6 +113,7 @@ export function LeaderboardPage() {
               <TableRow>
                 <TableHead className="w-16">{t("board.rankCol")}</TableHead>
                 <TableHead>{t("board.nickCol")}</TableHead>
+                <TableHead>{t("board.langCol")}</TableHead>
                 <TableHead className="text-right">WPM</TableHead>
               </TableRow>
             </TableHeader>
@@ -132,6 +134,18 @@ export function LeaderboardPage() {
                         {t("board.me")}
                       </Badge>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap items-center gap-1">
+                      {(e.languages ?? []).map((id) => {
+                        const lang = getLanguage(id);
+                        return lang ? (
+                          <span key={id} title={lang.name}>
+                            <LangBadge language={lang} size={22} />
+                          </span>
+                        ) : null;
+                      })}
+                    </div>
                   </TableCell>
                   <TableCell className="text-right font-semibold tabular-nums">{e.wpm}</TableCell>
                 </TableRow>
