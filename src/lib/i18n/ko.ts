@@ -37,7 +37,7 @@ const ko = {
   "home.step3d": "WPM과 정확도로 리더보드에 도전하세요",
   "home.languagesTitle": "지원 언어",
   "home.viewAll": "모두 보기",
-  "top.title": "장문 최고 기록",
+  "top.title": "최고 기록",
   "top.viewAll": "전체 보기",
   "demo.ok": "ok, finished in demo time",
 

@@ -38,7 +38,7 @@ const en: Dict = {
   "home.step3d": "Compete on the leaderboard with WPM and accuracy",
   "home.languagesTitle": "Supported languages",
   "home.viewAll": "View all",
-  "top.title": "Top long-form records",
+  "top.title": "Top records",
   "top.viewAll": "View all",
   "demo.ok": "ok, finished in demo time",
 

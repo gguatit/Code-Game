@@ -155,7 +155,8 @@ export function HomePage() {
         </div>
       </section>
 
-      <TopPlayers />
+      <TopPlayers category="long" />
+      <TopPlayers category="practical" />
     </div>
   );
 }

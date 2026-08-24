@@ -38,7 +38,7 @@ const ja: Dict = {
   "home.step3d": "WPMと正確性でリーダーボードに挑戦しましょう",
   "home.languagesTitle": "対応言語",
   "home.viewAll": "すべて見る",
-  "top.title": "長文ベスト記録",
+  "top.title": "ベスト記録",
   "top.viewAll": "すべて見る",
   "demo.ok": "ok, finished in demo time",
 

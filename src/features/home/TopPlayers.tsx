@@ -4,20 +4,20 @@ import { Trophy } from "lucide-react";
 import { useT } from "@/app/locale";
 import { api, type LeaderboardEntry } from "@/lib/api";
 
-export function TopPlayers() {
+export function TopPlayers({ category }: { category: "long" | "practical" }) {
   const [entries, setEntries] = useState<LeaderboardEntry[] | null>(null);
   const { t } = useT();
 
   useEffect(() => {
     let stale = false;
     api
-      .leaderboard("long")
+      .leaderboard(category)
       .then((r) => !stale && setEntries(r.entries.slice(0, 5)))
       .catch(() => !stale && setEntries([]));
     return () => {
       stale = true;
     };
-  }, []);
+  }, [category]);
 
   if (entries !== null && entries.length === 0) return null;
 
@@ -26,7 +26,7 @@ export function TopPlayers() {
       <div className="mb-4 flex items-center justify-between">
         <h2 className="flex items-center gap-2 text-lg font-semibold">
           <Trophy className="size-5 text-amber-500" />
-          {t("top.title")}
+          {t(`cat.${category}` as "cat.long")} {t("top.title")}
         </h2>
         <Link to="/leaderboard" className="text-sm text-muted-foreground hover:text-foreground">
           {t("top.viewAll")}
