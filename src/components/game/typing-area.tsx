@@ -35,18 +35,15 @@ export function TypingArea({ state }: { state: TypingState }) {
     (l) => state.input.length >= l.start && state.input.length <= l.end
   );
 
-  // 현재 줄이 박스 안에서 항상 보이도록 내부 스크롤만 조정(페이지 스크롤 간섭 없음)
+  // 커서 줄을 박스 세로 중앙에 고정해 따라오는 스크롤(페이지 스크롤 간섭 없음)
   useEffect(() => {
     const box = boxRef.current;
     if (!box || !showCaret || activeLine < 0) return;
     const el = box.querySelector<HTMLElement>(`[data-line="${activeLine}"]`);
     if (!el) return;
-    const pad = el.offsetHeight;
-    const top = el.offsetTop - pad;
-    const bottom = el.offsetTop + el.offsetHeight + pad;
-    if (top < box.scrollTop) box.scrollTop = Math.max(top, 0);
-    else if (bottom > box.scrollTop + box.clientHeight)
-      box.scrollTop = bottom - box.clientHeight;
+    const target = el.offsetTop - (box.clientHeight - el.offsetHeight) / 2;
+    const clamped = Math.max(target, 0);
+    if (box.scrollTop !== clamped) box.scrollTop = clamped;
   }, [state.input.length, activeLine, showCaret]);
 
   return (
