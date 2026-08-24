@@ -24,7 +24,7 @@ React 19 + Vite + TypeScript + Tailwind v4 + shadcn/ui, Cloudflare Workers 단�
 ## 스니펫 규칙 (테스트가 강제)
 
 - 각 언어 `long.ts`(5개) + `practical.ts`(4개), 문자열 배열 `export const snippets = [...]`
-- **각 스니펫 26~36줄**(멀티라인 `\n` 이스케이프), ASCII만(한국어·이모지 금지), 괄호 균형 — `src/data/snippets.test.ts`가 전부 검증
+- **길이 밴드: long 26~36줄, practical 38~54줄**(멀티라인 `\n` 이스케이프), ASCII만(한국어·이모지 금지), 괄호 균형 — `src/data/snippets.test.ts`가 카테고리별 BANDS로 전부 검증
 - 코드 문법 오류는 사용자가 민감하게 여김 — 추가/수정 시 로컬 툴체인(node/python/javac/rustc 등)으로 검증 가능한 언어는 반드시 컴파일 확인
 - snippet 파일 수정은 **파일 단위 Write 권장** — edit 도구의 이스케이프 혼용(`\n` 리터럴 vs 실제 개행)으로 파일이 망가진 사례 반복됨. Write 후 반드시 `npm test`로 검증
 

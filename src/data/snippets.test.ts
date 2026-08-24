@@ -42,22 +42,26 @@ describe("snippets", () => {
   });
 
   // 모든 문제 길이 통일: 이 밴드를 벗어나면 장문/실전 불일치가 재발한다
-  const LINE_MIN = 26;
-  const LINE_MAX = 36;
+  // 실전은 장문보다 길고 복잡한 프로덕션 수준 코드를 지향
+  const BANDS: Record<string, { min: number; max: number }> = {
+    long: { min: 26, max: 36 },
+    practical: { min: 38, max: 54 },
+  };
 
   it("every snippet is within the length band", () => {
     for (const lang of LANGUAGES) {
       for (const cat of CATEGORIES) {
+        const band = BANDS[cat.id];
         for (const s of getSnippets(lang.id, cat.id)) {
           const lines = s.split("\n").length;
           expect(
             lines,
             `${lang.id}/${cat.id}: ${lines} lines`
-          ).toBeGreaterThanOrEqual(LINE_MIN);
+          ).toBeGreaterThanOrEqual(band.min);
           expect(
             lines,
             `${lang.id}/${cat.id}: ${lines} lines`
-          ).toBeLessThanOrEqual(LINE_MAX);
+          ).toBeLessThanOrEqual(band.max);
         }
       }
     }
