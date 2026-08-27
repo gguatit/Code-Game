@@ -30,6 +30,7 @@ export function TrendChart({ data }: { data: TrendPoint[] }) {
         />
         <Line
           dataKey="accuracy"
+          yAxisId="right"
           stroke="oklch(0.6 0.15 162)"
           strokeWidth={1.8}
         />
