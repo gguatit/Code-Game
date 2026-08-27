@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { curveBasis } from "@visx/curve";
 import { useAuth } from "@/app/auth-context";
 import { useT } from "@/app/locale";
+import { LineChart } from "@/components/charts/line-chart";
+import { Line } from "@/components/charts/line";
+import { ChartTooltip } from "@/components/charts/tooltip";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Confetti } from "@/components/game/confetti";
-import { WpmChart } from "@/components/game/wpm-chart";
 import type { CategoryId } from "@/data/categories";
 import type { LanguageDef } from "@/data/languages";
 import type { Stats } from "@/engine/types";
@@ -32,6 +35,11 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
   const [saveState, setSaveState] = useState<"saving" | "saved" | "error">("saving");
   const requested = useRef(false);
   const wpmDisplay = useCountUp(stats.wpm);
+  // 250ms 샘플 → 경과 시간을 Date 축으로(LineChart 내부가 scaleTime)
+  const trendData = useMemo(
+    () => series.map((w, i) => ({ t: new Date(i * 250), wpm: w })),
+    [series]
+  );
 
   useEffect(() => {
     saveBest(language.id, category, stats.wpm);
@@ -97,7 +105,29 @@ export function ResultCard({ stats, language, category, series, onRestart }: Res
         </dl>
         <div>
           <div className="mb-1 text-xs text-muted-foreground">{t("result.trend")}</div>
-          <WpmChart series={series} />
+          <LineChart
+            data={trendData as unknown as Record<string, unknown>[]}
+            xDataKey="t"
+            aspectRatio="4 / 1"
+            margin={{ top: 8, right: 8, bottom: 8, left: 8 }}
+          >
+            <Line
+              dataKey="wpm"
+              stroke="var(--chart-line-primary)"
+              strokeWidth={2}
+              curve={curveBasis}
+            />
+            <ChartTooltip
+              showDatePill={false}
+              rows={(p) => [
+                {
+                  label: `${((p.t as Date).getTime() / 1000).toFixed(1)}s`,
+                  value: `${p.wpm} WPM`,
+                  color: "var(--chart-line-primary)",
+                },
+              ]}
+            />
+          </LineChart>
         </div>
         {!user && (
           <p className="text-sm text-muted-foreground">
