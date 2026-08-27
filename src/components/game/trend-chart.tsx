@@ -1,3 +1,4 @@
+import { curveMonotoneX } from "@visx/curve";
 import { LineChart } from "@/components/charts/line-chart";
 import { Line } from "@/components/charts/line";
 import { Grid } from "@/components/charts/grid";
@@ -27,12 +28,14 @@ export function TrendChart({ data }: { data: TrendPoint[] }) {
           dataKey="wpm"
           stroke="var(--chart-line-primary)"
           strokeWidth={2.2}
+          curve={curveMonotoneX}
         />
         <Line
           dataKey="accuracy"
           yAxisId="right"
           stroke="oklch(0.6 0.15 162)"
           strokeWidth={1.8}
+          curve={curveMonotoneX}
         />
         <ChartTooltip />
       </LineChart>
