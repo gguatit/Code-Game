@@ -23,6 +23,11 @@ import { LangBadge } from "@/components/game/lang-badge";
 import { CATEGORIES, type CategoryId } from "@/data/categories";
 import { LANGUAGES, getLanguage } from "@/data/languages";
 import { api, type LeaderboardEntry, type MyRank } from "@/lib/api";
+import { BarChart } from "@/components/charts/bar-chart";
+import { Bar } from "@/components/charts/bar";
+import { BarXAxis } from "@/components/charts/bar-x-axis";
+import { BarYAxis } from "@/components/charts/bar-y-axis";
+import { ChartTooltip } from "@/components/charts/tooltip";
 
 export function LeaderboardPage() {
   const { user } = useAuth();
@@ -107,52 +112,77 @@ export function LeaderboardPage() {
           </CardContent>
         </Card>
       ) : (
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-16">{t("board.rankCol")}</TableHead>
-                <TableHead>{t("board.nickCol")}</TableHead>
-                <TableHead>{t("board.langCol")}</TableHead>
-                <TableHead className="text-right">WPM</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {entries.map((e, i) => (
-                <TableRow key={`${e.displayName}-${i}`}>
-                  <TableCell
-                    className={`font-heading font-medium tabular-nums ${
-                      ["text-amber-400", "text-zinc-300", "text-orange-600"][i] ?? ""
-                    }`}
-                  >
-                    {i + 1}
-                  </TableCell>
-                  <TableCell>
-                    {e.displayName}
-                    {user?.displayName === e.displayName && (
-                      <Badge variant="outline" className="ml-2">
-                        {t("board.me")}
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap items-center gap-1">
-                      {(e.languages ?? []).map((id) => {
-                        const lang = getLanguage(id);
-                        return lang ? (
-                          <span key={id} title={lang.name}>
-                            <LangBadge language={lang} size={22} />
-                          </span>
-                        ) : null;
-                      })}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right font-semibold tabular-nums">{e.wpm}</TableCell>
+        <>
+          {entries.length > 1 && (
+            <Card>
+              <CardContent className="pt-6">
+                <BarChart
+                  data={
+                    entries.slice(0, 10).map((e) => ({
+                      name: e.displayName.length > 12 ? `${e.displayName.slice(0, 12)}…` : e.displayName,
+                      wpm: e.wpm,
+                    })) as unknown as Record<string, unknown>[]
+                  }
+                  xDataKey="name"
+                  aspectRatio="3 / 1"
+                  margin={{ top: 10, right: 12, bottom: 28, left: 40 }}
+                  className="w-full"
+                >
+                  <BarYAxis />
+                  <BarXAxis />
+                  <Bar dataKey="wpm" fill="var(--chart-line-primary)" />
+                  <ChartTooltip />
+                </BarChart>
+              </CardContent>
+            </Card>
+          )}
+          <Card>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-16">{t("board.rankCol")}</TableHead>
+                  <TableHead>{t("board.nickCol")}</TableHead>
+                  <TableHead>{t("board.langCol")}</TableHead>
+                  <TableHead className="text-right">WPM</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
+              </TableHeader>
+              <TableBody>
+                {entries.map((e, i) => (
+                  <TableRow key={`${e.displayName}-${i}`}>
+                    <TableCell
+                      className={`font-heading font-medium tabular-nums ${
+                        ["text-amber-400", "text-zinc-300", "text-orange-600"][i] ?? ""
+                      }`}
+                    >
+                      {i + 1}
+                    </TableCell>
+                    <TableCell>
+                      {e.displayName}
+                      {user?.displayName === e.displayName && (
+                        <Badge variant="outline" className="ml-2">
+                          {t("board.me")}
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-wrap items-center gap-1">
+                        {(e.languages ?? []).map((id) => {
+                          const lang = getLanguage(id);
+                          return lang ? (
+                            <span key={id} title={lang.name}>
+                              <LangBadge language={lang} size={22} />
+                            </span>
+                          ) : null;
+                        })}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right font-semibold tabular-nums">{e.wpm}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Card>
+        </>
       )}
     </div>
   );

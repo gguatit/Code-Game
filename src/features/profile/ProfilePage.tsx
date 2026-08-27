@@ -4,7 +4,7 @@ import { useAuth } from "@/app/auth-context";
 import { useT } from "@/app/locale";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { WpmChart } from "@/components/game/wpm-chart";
+import { TrendChart } from "@/components/game/trend-chart";
 import {
   Select,
   SelectContent,
@@ -119,36 +119,13 @@ export function ProfilePage() {
                     </Select>
                   </div>
                   {chartEntries.length > 1 ? (
-                    <>
-                      <div className="mb-1 flex items-center gap-4 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1.5">
-                          <span className="size-2 rounded-full bg-sky-500" />
-                          {t("stats.wpm")}
-                        </span>
-                        <span className="flex items-center gap-1.5">
-                          <span className="size-2 rounded-full bg-emerald-500" />
-                          {t("stats.accuracy")}
-                        </span>
-                      </div>
-                      <WpmChart
-                        series={chartEntries.map((r) => r.wpm)}
-                        accuracySeries={chartEntries.map((r) => r.accuracy)}
-                      />
-                      <div className="mt-1 flex justify-between text-xs text-muted-foreground tabular-nums">
-                        {[
-                          ...new Set([
-                            0,
-                            Math.floor(chartEntries.length / 3),
-                            Math.floor((chartEntries.length * 2) / 3),
-                            chartEntries.length - 1,
-                          ]),
-                        ].map((i) => (
-                          <span key={i}>
-                            {new Date(chartEntries[i].createdAt).toLocaleDateString(locale)}
-                          </span>
-                        ))}
-                      </div>
-                    </>
+                    <TrendChart
+                      data={chartEntries.map((r) => ({
+                        date: new Date(r.createdAt),
+                        wpm: r.wpm,
+                        accuracy: r.accuracy,
+                      }))}
+                    />
                   ) : (
                     <p className="py-6 text-center text-sm text-muted-foreground">
                       {t("board.empty")}
